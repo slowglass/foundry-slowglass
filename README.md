@@ -1,6 +1,6 @@
 # Slowglass Helper
 
-A Foundry VTT module.
+A Foundry VTT module that enhances gameplay by automatically managing actor status effects (unconscious/dead based on HP) and tracking the usage of throwable weapons and ammunition for player characters during combat. It reports item usage to the Game Master via chat messages, with features tailored for D&D 5e item properties.
 
 ## Installation
 
@@ -27,10 +27,8 @@ To install the latest development version of this module, use the following mani
 `https://cdn.jsdelivr.net/gh/slowglass/foundry-slowglass@master/module.json`
 
 ## Local Development (Eccles Road)
-The current assumption is that the developement directory will sit inside the Foundrt VTT Test server modules directory
-
-In order to run the release script we need to run
+Run 
 ```
-powershell -ExecutionPolicy Bypass -File X:\game-data\13\test\Data\modules\foundry-slowglass\release.ps1
+./build.sh <server>
 ```
-The reason for this is that the repo is located on a remote drive.
+to copy code to that Foundry-13 server (default is test)
