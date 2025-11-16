@@ -3,6 +3,9 @@
 # Exit immediately if a command exits with a non-zero status.
 set -e
 
+# Determine the target server path
+TARGET_SERVER_PATH=${1:-"test"}
+
 # Check if jq is installed
 if ! command -v jq &> /dev/null
 then
@@ -44,5 +47,5 @@ echo "Module zip file created: ${ZIP_FILE_NAME}"
 
 # Copy data to Test server
 /usr/bin/scp -r -O *.js module.json styles lang templates \
-    Tardis:/Volume1/Foundry/game-data/13/test/Data/modules/foundry-slowglass
-ssh Tardis chown -v -R cjd.vtt /ssVolume1/Foundry/game-data/13/test/Data/modules/foundry-slowglass
+    Tardis:/Volume1/Foundry/game-data/13/${TARGET_SERVER_PATH}/Data/modules/foundry-slowglass
+ssh Tardis chown -v -R cjd.vtt /ssVolume1/Foundry/game-data/13/${TARGET_SERVER_PATH}/Data/modules/foundry-slowglass
