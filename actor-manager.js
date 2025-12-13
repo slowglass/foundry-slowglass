@@ -1,4 +1,4 @@
-import { MODULE_NAME } from "./main.js";
+import { MODULE_NAME } from "./constants.js";
 
 export class ActorManager {
   /**

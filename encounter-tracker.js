@@ -1,4 +1,4 @@
-import { MODULE_NAME } from "./main.js";
+import { MODULE_NAME } from "./constants.js";
 
 export class EncounterTracker {
   constructor() {
@@ -100,9 +100,9 @@ export class EncounterTracker {
     for (const [actorId, itemCounts] of combatantCounts.entries()) {
       const actor = game.actors.get(actorId);
       if (!actor) continue;
-      
+
       let actorItemsList = "";
-      if (itemCounts.size >0) {
+      if (itemCounts.size > 0) {
         for (const [itemId, count] of itemCounts.entries()) {
           const item = actor.items.get(itemId);
           if (item) {
@@ -167,7 +167,7 @@ export class EncounterTracker {
       }
       if (hasUsage) {
         chatMessage += `<ul>`;
-        chatMessage += this._addActorCounts(actor, actorItemsList);      
+        chatMessage += this._addActorCounts(actor, actorItemsList);
         chatMessage += `</ul>`;
       }
     }
@@ -182,8 +182,8 @@ export class EncounterTracker {
   _sendChatMessage(content) {
     ChatMessage.create({
       title: MODULE_NAME,
-     // user: game.user.id,
-     // speaker: ChatMessage.getSpeaker({ alias: MODULE_NAME }),
+      // user: game.user.id,
+      // speaker: ChatMessage.getSpeaker({ alias: MODULE_NAME }),
       content: content,
       whisper: ChatMessage.getWhisperRecipients("GM"), // Whisper to GM
     });

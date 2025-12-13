@@ -1,10 +1,19 @@
-export const MODULE_NAME = 'Ammo Status';
+import { MODULE_NAME, MODULE_VERSION } from "./constants.js";
 import { ActorManager } from "./actor-manager.js";
 import { EncounterTracker } from "./encounter-tracker.js";
+import { AttackRollHandler } from "./attack-roll-handler.js";
+import { RollDataHandler } from "./roll-data-handler.js";
 
 Hooks.once('init', () => {
   console.log(`${MODULE_NAME} | Initializing`);
+  console.log(`${MODULE_NAME} | Version ${MODULE_VERSION} loaded.`);
+
+  // Roll Data Handler for injecting @is_action variables
+  // Register early to ensure we catch all getRollData calls
+  const rollDataHandler = new RollDataHandler();
+  rollDataHandler.registerWrapper();
 });
+
 
 Hooks.once('ready', async () => {
   console.log(`✅ ${MODULE_NAME} | Ready`);
