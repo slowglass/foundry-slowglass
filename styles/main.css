@@ -1,0 +1,101 @@
+/* Restore Chat Log styling in Journals - SCOPED */
+.slowglass-chat-archive {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+/* Match both .chat-message AND .message for V13 compatibility compatibility */
+.slowglass-chat-archive .chat-message,
+.slowglass-chat-archive .message {
+    position: relative;
+    padding: 5px;
+    margin: 2px 0;
+    border: 1px solid #7a7971;
+    border-radius: 5px;
+    background: #dcbba4 url(../../../ui/parchment.jpg) repeat;
+    box-shadow: 0 0 2px #000;
+    font-size: 14px;
+    color: #191813 !important;
+    /* Force dark text on parchment */
+    text-align: left;
+}
+
+/* Force specific elements to have dark text */
+.slowglass-chat-archive .chat-message *,
+.slowglass-chat-archive .message * {
+    color: #191813 !important;
+    /* RECURSIVE FORCE DARK TEXT */
+    text-shadow: none !important;
+}
+
+.slowglass-chat-archive .chat-message .message-header,
+.slowglass-chat-archive .message .message-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #7a7971;
+    margin-bottom: 3px;
+    padding-bottom: 3px;
+    font-size: 12px;
+    color: #4b4a44 !important;
+}
+
+.slowglass-chat-archive .chat-message .message-header .message-sender,
+.slowglass-chat-archive .message .message-header .message-sender {
+    font-weight: bold;
+    color: #191813 !important;
+}
+
+/* Dice Roll Styling for Details/Summary */
+.slowglass-chat-archive .chat-message details,
+.slowglass-chat-archive .message details {
+    cursor: pointer;
+}
+
+.slowglass-chat-archive .chat-message summary,
+.slowglass-chat-archive .message summary {
+    list-style: none;
+}
+
+.slowglass-chat-archive .chat-message summary::-webkit-details-marker,
+.slowglass-chat-archive .message summary::-webkit-details-marker {
+    display: none;
+}
+
+/* Ensure dice tooltips are visible when open */
+.slowglass-chat-archive .chat-message .dice-tooltip,
+.slowglass-chat-archive .message .dice-tooltip {
+    display: block !important;
+}
+
+/* Specific DnD5e styling adjustments */
+.slowglass-chat-archive .chat-message.dnd5e .card-header h3,
+.slowglass-chat-archive .message.dnd5e .card-header h3 {
+    border-bottom: 1px solid #000;
+    margin-bottom: 5px;
+    color: #191813 !important;
+}
+
+/* Force ALL headers to be dark - Extra Specificity */
+.slowglass-chat-archive .chat-message h1,
+.slowglass-chat-archive .chat-message h2,
+.slowglass-chat-archive .chat-message h3,
+.slowglass-chat-archive .chat-message h4,
+.slowglass-chat-archive .chat-message h5,
+.slowglass-chat-archive .chat-message h6,
+.slowglass-chat-archive .chat-message header,
+.slowglass-chat-archive .message h1,
+.slowglass-chat-archive .message h2,
+.slowglass-chat-archive .message h3,
+.slowglass-chat-archive .message h4,
+.slowglass-chat-archive .message h5,
+.slowglass-chat-archive .message h6,
+.slowglass-chat-archive .message header {
+    color: #191813 !important;
+    text-shadow: none !important;
+    font-weight: bold !important;
+}

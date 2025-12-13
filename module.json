@@ -1,7 +1,7 @@
 {
     "id": "foundry-slowglass",
     "title": "Slowglass Helper",
-    "version": "0.0.15",
+    "version": "0.0.29",
     "description": "A general-purpose Foundry VTT module designed for players in Eccles Road Games, compatible with Foundry VTT Version 13. This module provides various helper functions and enhancements to improve the gaming experience.",
     "url": "https://github.com/slowglass/foundry-slowglass",
     "manifest": "https://github.com/slowglass/foundry-slowglass/releases/latest/download/module.json",

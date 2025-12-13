@@ -1,5 +1,8 @@
 {
   "slowglass.welcome": "Welcome to the slowglass module!",
+  "DND5E.ConsumableSmallBolt": "Small Bolt",
   "slowglass.deleteFuture": "Delete Future",
-  "slowglass.deleteFutureConfirm": "Are you sure you want to delete this message and all subsequent messages?"
+  "slowglass.deleteFutureConfirm": "Are you sure you want to delete this message and all subsequent messages?",
+  "slowglass.archiveChat": "Archive Chat Log",
+  "slowglass.archiveChatSuccess": "Archived {count} messages to Journal: {journalName}"
 }
