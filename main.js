@@ -3,6 +3,7 @@ import { ActorManager } from "./actor-manager.js";
 import { EncounterTracker } from "./encounter-tracker.js";
 import { AttackRollHandler } from "./attack-roll-handler.js";
 import { RollDataHandler } from "./roll-data-handler.js";
+import { ChatHandler } from "./chat-handler.js";
 
 Hooks.once('init', () => {
   console.log(`${MODULE_NAME} | Initializing`);
@@ -12,6 +13,9 @@ Hooks.once('init', () => {
   // Register early to ensure we catch all getRollData calls
   const rollDataHandler = new RollDataHandler();
   rollDataHandler.registerWrapper();
+
+  // Chat Handler
+  new ChatHandler();
 });
 
 
