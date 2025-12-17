@@ -95,124 +95,222 @@ export class ChatHandler {
             return;
         }
 
-        // 2. Generate Page Name from Timestamp Range
-        const formatDate = (ts) => {
-            const d = new Date(ts);
-            return d.toLocaleString(); // Use local format or customize as needed
+        // 2. Group messages by Day (YYYY-MM-DD)
+        const messagesByDay = {};
+        const today = new Date();
+        const todayStr = today.toISOString().split('T')[0]; // YYYY-MM-DD
+
+        for (const message of messages) {
+            const date = new Date(message.timestamp);
+            const dateStr = date.toISOString().split('T')[0];
+
+            // Skip messages from today
+            if (dateStr === todayStr) continue;
+
+            if (!messagesByDay[dateStr]) {
+                messagesByDay[dateStr] = [];
+            }
+            messagesByDay[dateStr].push(message);
+        }
+
+        const daysToArchive = Object.keys(messagesByDay).sort();
+
+        if (daysToArchive.length === 0) {
+            ui.notifications.info("No messages to archive (skipping today's messages).");
+            return;
+        }
+
+        // 3. Find or Create "Game Logs" Compendium
+        const compendiumLabel = "Game Logs";
+        let pack = game.packs.find(p => p.metadata.label === compendiumLabel);
+
+        if (!pack) {
+            try {
+                pack = await CompendiumCollection.createCompendium({
+                    label: compendiumLabel,
+                    type: "JournalEntry"
+                });
+            } catch (err) {
+                ui.notifications.error(`Could not create Compendium "${compendiumLabel}": ${err.message}`);
+                return;
+            }
+        }
+
+        if (pack.locked) {
+            ui.notifications.warn(`Compendium "${compendiumLabel}" is locked. Cannot archive chat.`);
+            return;
+        }
+
+        let archivedCount = 0;
+
+        // Helper to format month folder name: "04: April"
+        const getMonthFolderName = (date) => {
+            const monthNum = String(date.getMonth() + 1).padStart(2, '0');
+            const monthName = date.toLocaleString('default', { month: 'long' });
+            return `${monthNum}: ${monthName}`;
         };
 
-        const startTime = formatDate(messages[0].timestamp);
-        const endTime = formatDate(messages[messages.length - 1].timestamp);
-        const pageName = `${startTime} - ${endTime}`;
+        // Cache folders to avoid repeated lookups
+        const folderCache = {};
 
-        // 3. Generate Content (Concatenate HTML)
-        // We wrap it in a ol class="chat-log" to mimic the sidebar structure
-        // hoping to inherit standard styles for .chat-message
+        // Helper to find or create folder in compendium
+        const getOrCreateFolder = async (name, parentId = null) => {
+            const cacheKey = `${parentId || 'root'}_${name}`;
+            if (folderCache[cacheKey]) return folderCache[cacheKey];
 
-        let content = '<ol class="chat-log slowglass-chat-archive">';
-        for (const message of messages) {
-            try {
-                // V13: renderHTML returns Promise<HTMLElement>
-                const html = await message.renderHTML();
-                if (html) {
-                    // 1. CLEANUP (Remove Buttons)
-                    // User Request: "skip the following buttons: `Summon`, `Consume Resource`, `Refund Resource`, `Damage`, `Attack` (anything in div that has the `card-button` class"
+            // Note: In V11+, compendium folders are accessed via pack.folders
+            const existing = pack.folders.find(f => f.name === name && f.folder?.id === (parentId || undefined) && f.folder === (parentId ? null : undefined)); // Logic for parent check is tricky with null/undefined.
+            // Simplified check:
+            const existingFolder = pack.folders.find(f => f.name === name && (parentId ? f.folder?.id === parentId : !f.folder));
+
+            if (existingFolder) {
+                folderCache[cacheKey] = existingFolder;
+                return existingFolder;
+            }
+
+            const folderData = {
+                name: name,
+                type: "JournalEntry",
+                pack: pack.collection,
+                folder: parentId
+            };
+
+            const newFolder = await Folder.create(folderData, { pack: pack.collection });
+            folderCache[cacheKey] = newFolder;
+            return newFolder;
+        };
+
+        for (const dayStr of daysToArchive) {
+            const dayMessages = messagesByDay[dayStr];
+            const dateObj = new Date(dayStr);
+            const year = dateObj.getFullYear().toString();
+            const monthFolder = getMonthFolderName(dateObj);
+
+            // 4. Check if Journal exists for this day
+            // We search in the pack index
+            const journalName = dayStr; // Name of the day
+            const index = await pack.getIndex();
+            const existingEntry = index.find(i => i.name === journalName);
+
+            if (existingEntry) {
+                console.log(`slowglass | Journal for ${dayStr} already exists. Skipping.`);
+                continue;
+            }
+
+            // 5. Ensure Folder Structure
+            const yearFolder = await getOrCreateFolder(year);
+            const targetFolder = await getOrCreateFolder(monthFolder, yearFolder.id);
+
+            // 6. Generate Content for 3 Pages
+            let contentAll = '<ol class="chat-log slowglass-chat-archive">';
+            let contentGM = '<ol class="chat-log slowglass-chat-archive">';
+            let contentLogs = '<ol class="chat-log slowglass-chat-archive">';
+
+            for (const message of dayMessages) {
+                try {
+                    const html = await message.renderHTML();
+                    if (!html) continue;
+
+                    // --- Processing Logic (Clean up buttons, headers, etc) ---
+                    // Copied and adapted from previous version
+
+                    // 1. Remove Buttons
                     const buttonsToRemove = html.querySelectorAll('.card-button, button, .card-buttons');
-                    for (const btn of buttonsToRemove) {
-                        btn.remove();
-                    }
+                    buttonsToRemove.forEach(btn => btn.remove());
 
-                    // 1b. SIMPLIFY DICE ROLLS
-                    // User Request: "Please also remove divs with class='dice-formula`, `dice-toolkit-collapser` and remove the code to turn it into <summary><details>"
+                    // 2. Simplify Dice Rolls
                     const diceElementsToRemove = html.querySelectorAll('.dice-formula, .dice-tooltip, .dice-toolkit-collapser');
-                    for (const el of diceElementsToRemove) {
-                        el.remove();
-                    }
+                    diceElementsToRemove.forEach(el => el.remove());
 
-                    // 2. FORCE STYLING (The Nuclear Option)
-                    // We iterate over element and force colors
+                    // 3. Force Styles
                     const forceColor = (el) => {
                         el.style.setProperty("color", "#191813", "important");
                         el.style.setProperty("text-shadow", "none", "important");
                     };
+                    forceColor(html); // Main element
+                    html.querySelectorAll('*').forEach(el => forceColor(el)); // All children
 
-                    // Force on main element
-                    forceColor(html);
-
-                    // 2. REPLACE HEADERS (h1-h6) with DIVs
-                    // User Request: "Please remove any <h1> to <h6> tags and replace them by styled div sections instead"
+                    // 4. Replace Headers with Divs
                     const headers = html.querySelectorAll('h1, h2, h3, h4, h5, h6');
                     for (const header of headers) {
                         const div = document.createElement('div');
-                        // Copy child nodes
-                        while (header.firstChild) {
-                            div.appendChild(header.firstChild);
-                        }
-                        // Copy classes
+                        while (header.firstChild) div.appendChild(header.firstChild);
                         div.className = header.className;
-                        // Copy styles
                         div.style.cssText = header.style.cssText;
-
-                        // Add utility class to pretend to be a header
                         div.classList.add('archived-header');
                         div.style.fontWeight = 'bold';
                         div.style.display = 'block';
 
-                        // FIX ICON LOCATION:
-                        // System CSS often uses H3 for flex alignment of Icon + Text. 
-                        // Since we changed H3 -> DIV, we lost that layout.
-                        // We restore it if we detect an image inside.
+                        // Restore icon alignment if needed
                         if (div.querySelector('img')) {
                             div.style.display = 'flex';
                             div.style.alignItems = 'center';
-                            div.style.gap = '5px'; // Standard gap
+                            div.style.gap = '5px';
                         }
-
-                        // Replace
                         header.parentNode.replaceChild(div, header);
                     }
 
-                    // 3. RECURSIVE FORCE (The Actual Nuclear Option)
-                    // The screenshot showed that dnd5e system CSS targets specific spans (.title) 
-                    // which overrides inherited colors. We must visit every node.
-                    const all = html.querySelectorAll('*');
-                    for (const el of all) {
-                        // We only want to override text color, we don't want to break layout
-                        // But color and text-shadow are safe to force for a "printed" look
-                        forceColor(el);
+                    const htmlString = html.outerHTML;
+
+                    // Append to "All"
+                    contentAll += htmlString;
+
+                    // Append to "GM"
+                    contentGM += htmlString;
+
+                    // Append to "Logs" (Public only)
+                    // Check visibility logic: simple check for whisper/blind
+                    const isWhisper = message.whisper.length > 0;
+                    const isBlind = message.blind;
+
+                    if (!isWhisper && !isBlind) {
+                        contentLogs += htmlString;
                     }
 
-                    content += html.outerHTML;
+                } catch (err) {
+                    console.error("slowglass | Failed to render message", message.id, err);
                 }
-            } catch (err) {
-                console.error("slowglass | Failed to render message", message.id, err);
-                content += `<li class="chat-message error">Failed to render message ${message.id}</li>`;
             }
-        }
-        content += '</ol>';
 
-        // 4. Find or Create "Game Chat" Journal
-        const journalName = "Game Chat";
-        let journal = game.journal.getName(journalName);
+            contentAll += '</ol>';
+            contentGM += '</ol>';
+            contentLogs += '</ol>';
 
-        if (!journal) {
-            journal = await JournalEntry.create({
+            // 7. Create Journal Entry
+            const newJournal = await JournalEntry.create({
                 name: journalName,
-                folder: null // Root folder or specify one
-            });
+                folder: targetFolder.id
+            }, { pack: pack.collection });
+
+            // 8. Create Pages
+            await newJournal.createEmbeddedDocuments("JournalEntryPage", [
+                {
+                    name: "All",
+                    text: { content: contentAll },
+                    type: "text",
+                    format: 1
+                },
+                {
+                    name: "GM",
+                    text: { content: contentGM },
+                    type: "text",
+                    format: 1
+                },
+                {
+                    name: "Logs",
+                    text: { content: contentLogs },
+                    type: "text",
+                    format: 1
+                }
+            ]);
+
+            archivedCount++;
         }
 
-        // 5. Create Journal Page
-        await journal.createEmbeddedDocuments("JournalEntryPage", [{
-            name: pageName,
-            text: { content: content }, // V10+ data structure for text pages
-            type: "text",
-            format: 1 // html
-        }]);
-
-        ui.notifications.info(game.i18n.format("slowglass.archiveChatSuccess", {
-            count: messages.length,
-            journalName: journalName
-        }));
+        if (archivedCount > 0) {
+            ui.notifications.info(`Archived chat for ${archivedCount} days.`);
+        } else {
+            ui.notifications.info("No new days to archive.");
+        }
     }
 }
