@@ -26,10 +26,13 @@ echo "Creating zip file: ${ZIP_FILE_NAME}"
 # .git directory, any existing zip files, and the build.sh script itself
 EXCLUDE_PATTERNS=(
     ".git/*"
-    "*.zip"
-    "build.sh"
-    "build.ps1" # Exclude the powershell script as well
+    ".gitattributes"
+    ".gitignore"
     ".github/*" # Exclude github workflows
+    ".vscode/*"
+    "GEMINI.md"
+    "build.sh"
+    "*.zip"
 )
 
 # Build the exclude options for the zip command
@@ -46,6 +49,6 @@ eval zip -r "${ZIP_FILE_NAME}" . ${ZIP_EXCLUDE}
 echo "Module zip file created: ${ZIP_FILE_NAME}"
 
 # Copy data to Test server
-/usr/bin/scp -r -O *.js module.json styles lang templates \
+/usr/bin/scp -r -O *.js module.json styles lang templates assets \
     Tardis:/Volume1/Foundry/game-data/13/${TARGET_SERVER_PATH}/Data/modules/foundry-slowglass
 ssh Tardis chown -v -R cjd.vtt /Volume1/Foundry/game-data/13/${TARGET_SERVER_PATH}/Data/modules/foundry-slowglass
