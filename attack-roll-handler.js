@@ -145,35 +145,76 @@ export class AttackRollHandler {
         const root = html instanceof HTMLElement ? html : html[0];
         if (!root) return;
 
-        // Use standard getFlag API for module code
+        // 1. DAMAGE TRAY INJECTION
         let damageData = message.getFlag(MODULE_NAME, "damageData");
-
-        // Fallback for cards rolled during macro testing phase
         if (!damageData) damageData = message.flags?.slowglass?.damageData;
-        if (!damageData || root.querySelector("damage-application")) return;
 
-        console.log(`${MODULE_NAME} | Injecting interactive damage tray for message ${message.id}`);
+        if (damageData && !root.querySelector("damage-application")) {
+            console.log(`${MODULE_NAME} | Injecting interactive damage tray for message ${message.id}`);
+            const tray = document.createElement("damage-application");
+            tray.setAttribute("open", "");
+            tray.setAttribute("visible", "");
+            tray.damages = damageData.map(d => ({ ...d, properties: new Set(d.properties || []) }));
 
-        const tray = document.createElement("damage-application");
-        tray.setAttribute("open", "");
-        tray.setAttribute("visible", "");
-
-        tray.damages = damageData.map(d => ({
-            ...d,
-            properties: new Set(d.properties || [])
-        }));
-
-        const buttons = root.querySelector(".card-buttons");
-        const card = root.querySelector(".chat-card");
-
-        if (buttons) {
-            buttons.insertAdjacentElement("afterend", tray);
-        } else if (card) {
-            card.insertAdjacentElement("afterend", tray);
-        } else {
-            const content = root.querySelector(".message-content");
-            if (content) content.appendChild(tray);
+            const buttons = root.querySelector(".card-buttons");
+            const card = root.querySelector(".chat-card");
+            if (buttons) buttons.insertAdjacentElement("afterend", tray);
+            else if (card) card.insertAdjacentElement("afterend", tray);
         }
+
+        // 2. SAVE REQUEST INJECTION (GM ONLY)
+        if (!game.user.isGM) return;
+
+        // More robust save button detection for different dnd5e versions
+        const potentialSaveButtons = root.querySelectorAll('button[data-action]');
+        potentialSaveButtons.forEach(btn => {
+            const action = btn.dataset.action;
+            if (!(action === "save" || action === "rollSave" || action.includes("abilitySave"))) return;
+
+            // Check if we already injected it
+            if (btn.parentElement.querySelector('.request-save-link')) return;
+
+            const abilityId = btn.dataset.ability || btn.dataset.abilityId;
+            if (!abilityId) return;
+
+            console.log(`${MODULE_NAME} | Found save button for ${abilityId}. Injecting request link.`);
+
+            const requestLink = document.createElement("a");
+            requestLink.classList.add("request-save-link");
+            requestLink.innerHTML = '<i class="fa-solid fa-bullhorn" title="Request Saves from Targets"></i>';
+            requestLink.style.marginLeft = "8px";
+            requestLink.style.marginRight = "8px";
+            requestLink.style.cursor = "pointer";
+            requestLink.style.fontSize = "1.2em"; // Make it a bit bigger
+            requestLink.style.color = "var(--dnd5e-color-blue)";
+            requestLink.style.verticalAlign = "middle";
+
+            requestLink.addEventListener("click", async (event) => {
+                event.preventDefault();
+                event.stopPropagation();
+
+                const targets = game.user.targets;
+                if (targets.size === 0) {
+                    ui.notifications.warn("Please target at least one token to request a save.");
+                    return;
+                }
+
+                const actorUuids = Array.from(targets).map(t => t.actor.uuid);
+                console.log(`${MODULE_NAME} | Requesting ${abilityId} save for actors:`, actorUuids);
+
+                game.socket.emit(`module.${MODULE_NAME}`, {
+                    type: "requestRoll",
+                    actorUuids: actorUuids,
+                    rollType: "save",
+                    id: abilityId
+                });
+
+                ui.notifications.info(`Requested ${abilityId.toUpperCase()} saves from ${targets.size} target(s).`);
+            });
+
+            // Insert after the button for better visibility and to avoid button-specific font styling
+            btn.insertAdjacentElement("afterend", requestLink);
+        });
     }
 
     /**

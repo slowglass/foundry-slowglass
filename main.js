@@ -52,6 +52,7 @@ Hooks.once('ready', async () => {
     if (data.type === "requestRoll" || data.type === "requestSave") {
       const uuids = Array.isArray(data.actorUuids) ? data.actorUuids : [data.actorUuid];
       const rollType = data.rollType || (data.type === "requestSave" ? "save" : null);
+      const advantageMode = data.advantageMode || "ask";
 
       for (const uuid of uuids) {
         let doc = fromUuidSync(uuid);
@@ -59,26 +60,92 @@ Hooks.once('ready', async () => {
         const actor = doc.actor || (doc instanceof Actor ? doc : null);
         if (!actor || !actor.isOwner) continue;
 
-        console.log(`${MODULE_NAME} | Received ${rollType} request for ${actor.name} (${data.id || data.abilityId})`);
+        const traitId = data.id || data.abilityId;
+        const traitLabel = rollType === "skill" ? CONFIG.DND5E.skills[traitId]?.label : CONFIG.DND5E.abilities[traitId]?.label;
+        const typeLabel = rollType === "save" ? "Saving Throw" : rollType === "check" ? "Ability Check" : "Skill Check";
 
-        try {
-          if (rollType === "save") {
-            const abilityId = data.id || data.abilityId;
-            if (typeof actor.rollSavingThrow === "function") actor.rollSavingThrow({ ability: abilityId });
-            else if (typeof actor.rollAbilitySave === "function") actor.rollAbilitySave(abilityId);
-          } else if (rollType === "check") {
-            if (typeof actor.rollAbilityCheck === "function") actor.rollAbilityCheck({ ability: data.id });
-            else if (typeof actor.rollAbility === "function") actor.rollAbility(data.id, { type: "check" });
-          } else if (rollType === "skill") {
-            if (typeof actor.rollSkill === "function") actor.rollSkill({ skill: data.id });
-            else if (typeof actor.rollAbility === "function") actor.rollAbility(data.id, { type: "skill" });
+        console.log(`${MODULE_NAME} | Received ${rollType} request for ${actor.name} (${traitId}) [${advantageMode}]`);
+
+        const triggerRoll = (mode) => {
+          try {
+            const options = {
+              advantage: mode === "advantage",
+              disadvantage: mode === "disadvantage",
+              slowglassMode: mode,
+              dialogOptions: { slowglassMode: mode }
+            };
+
+            if (rollType === "save") {
+              if (typeof actor.rollSavingThrow === "function") actor.rollSavingThrow({ ability: traitId, ...options });
+              else if (typeof actor.rollAbilitySave === "function") actor.rollAbilitySave(traitId, options);
+            } else if (rollType === "check") {
+              if (typeof actor.rollAbilityCheck === "function") actor.rollAbilityCheck({ ability: traitId, ...options });
+              else if (typeof actor.rollAbility === "function") actor.rollAbility(traitId, { type: "check", ...options });
+            } else if (rollType === "skill") {
+              if (typeof actor.rollSkill === "function") actor.rollSkill({ skill: traitId, ...options });
+              else if (typeof actor.rollAbility === "function") actor.rollAbility(traitId, { type: "skill", ...options });
+            }
+          } catch (err) {
+            console.error(`${MODULE_NAME} | Roll request failed for ${actor.name}`, err);
           }
-        } catch (err) {
-          console.error(`${MODULE_NAME} | Roll request failed for ${actor.name}`, err);
-        }
+        };
+
+        // Always trigger the standard dnd5e dialog
+        triggerRoll(advantageMode);
       }
     }
   });
+
+  // Filter dnd5e Roll Configuration Dialog buttons based on GM request
+  const filterRollDialog = (app, html, data) => {
+    // Check both standard and nested options for our custom flag
+    const mode = app.options?.slowglassMode || app.options?.dialogOptions?.slowglassMode;
+    if (!mode || mode === "ask") return;
+
+    html = html instanceof HTMLElement ? $(html) : html;
+
+    // Select all buttons in the dialog that look like roll options
+    const allButtons = html.find('button');
+    let foundMatch = false;
+
+    allButtons.each((i, btn) => {
+      const $btn = $(btn);
+      const text = $btn.text().toUpperCase().trim();
+      const name = ($btn.attr('name') || "").toUpperCase();
+
+      const isAdv = $btn.hasClass('advantage') || name === 'ADVANTAGE' || text.includes('ADVANTAGE');
+      const isDis = $btn.hasClass('disadvantage') || name === 'DISADVANTAGE' || text.includes('DISADVANTAGE');
+      const isNor = $btn.hasClass('normal') || name === 'NORMAL' || text.includes('NORMAL');
+
+      if (isAdv || isDis || isNor) {
+        foundMatch = true;
+        let shouldShow = false;
+        if (mode === "advantage" && isAdv) shouldShow = true;
+        if (mode === "disadvantage" && isDis) shouldShow = true;
+        if (mode === "normal" && isNor) shouldShow = true;
+
+        if (!shouldShow) {
+          $btn.hide();
+          $btn.css({ "display": "none", "visibility": "hidden" });
+          $btn.addClass("hidden");
+        } else {
+          // Promote the remaining button to "ROLL"
+          $btn.css({ "display": "flex", "visibility": "visible" });
+          $btn.html('<i class="fas fa-dice-d20"></i> ROLL');
+          $btn.css({
+            "flex": "1",
+            "font-weight": "bold",
+            "border": "1px solid #ff6400",
+            "box-shadow": "inset 0 0 10px rgba(255, 100, 0, 0.3)",
+            "color": "white"
+          });
+        }
+      }
+    });
+  };
+
+  Hooks.on("renderDialog", filterRollDialog);
+  Hooks.on("renderRollConfigurationDialog", filterRollDialog);
 
   window.toggleCollapsible = (event) => {
     const header = event.currentTarget;
