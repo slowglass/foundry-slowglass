@@ -35,6 +35,13 @@ Hooks.once('ready', async () => {
   Hooks.on("renderDialog", attackRollHandler.handleRenderDialog.bind(attackRollHandler));
   Hooks.on("renderRollConfigurationDialog", attackRollHandler.handleRenderDialog.bind(attackRollHandler));
 
+  // New hooks for Weapon Roll Hook replacement logic
+  Hooks.on("dnd5e.preRollAttackV2", attackRollHandler.handlePreRollAttack.bind(attackRollHandler));
+  Hooks.on("dnd5e.preRollDamageV2", attackRollHandler.handlePreRollDamage.bind(attackRollHandler));
+  Hooks.on("dnd5e.rollAttackV2", attackRollHandler.handleRollAttack.bind(attackRollHandler));
+  Hooks.on("dnd5e.rollDamageV2", attackRollHandler.handleRollDamage.bind(attackRollHandler));
+  Hooks.on("dnd5e.renderChatMessage", attackRollHandler.handleRenderChatMessage.bind(attackRollHandler));
+
   // Encounter Tracker for throwable weapons and ammunition
   const encounterTracker = new EncounterTracker();
   Hooks.on("combatStart", encounterTracker._storeInitialCounts.bind(encounterTracker));

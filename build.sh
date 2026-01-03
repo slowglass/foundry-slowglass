@@ -48,4 +48,4 @@ echo "Module zip file created: ${ZIP_FILE_NAME}"
 # Copy data to Test server
 /usr/bin/scp -r -O *.js module.json styles lang templates \
     Tardis:/Volume1/Foundry/game-data/13/${TARGET_SERVER_PATH}/Data/modules/foundry-slowglass
-ssh Tardis chown -v -R cjd.vtt /ssVolume1/Foundry/game-data/13/${TARGET_SERVER_PATH}/Data/modules/foundry-slowglass
+ssh Tardis chown -v -R cjd.vtt /Volume1/Foundry/game-data/13/${TARGET_SERVER_PATH}/Data/modules/foundry-slowglass
