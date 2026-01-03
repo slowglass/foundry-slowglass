@@ -47,6 +47,39 @@ Hooks.once('ready', async () => {
   Hooks.on("combatStart", encounterTracker._storeInitialCounts.bind(encounterTracker));
   Hooks.on("deleteCombat", encounterTracker._calculateAndReportUsage.bind(encounterTracker));
 
+  // Socket listener for Roll Requests (Saves, Checks, Skills)
+  game.socket.on(`module.${MODULE_NAME}`, (data) => {
+    if (data.type === "requestRoll" || data.type === "requestSave") {
+      const uuids = Array.isArray(data.actorUuids) ? data.actorUuids : [data.actorUuid];
+      const rollType = data.rollType || (data.type === "requestSave" ? "save" : null);
+
+      for (const uuid of uuids) {
+        let doc = fromUuidSync(uuid);
+        if (!doc) continue;
+        const actor = doc.actor || (doc instanceof Actor ? doc : null);
+        if (!actor || !actor.isOwner) continue;
+
+        console.log(`${MODULE_NAME} | Received ${rollType} request for ${actor.name} (${data.id || data.abilityId})`);
+
+        try {
+          if (rollType === "save") {
+            const abilityId = data.id || data.abilityId;
+            if (typeof actor.rollSavingThrow === "function") actor.rollSavingThrow({ ability: abilityId });
+            else if (typeof actor.rollAbilitySave === "function") actor.rollAbilitySave(abilityId);
+          } else if (rollType === "check") {
+            if (typeof actor.rollAbilityCheck === "function") actor.rollAbilityCheck({ ability: data.id });
+            else if (typeof actor.rollAbility === "function") actor.rollAbility(data.id, { type: "check" });
+          } else if (rollType === "skill") {
+            if (typeof actor.rollSkill === "function") actor.rollSkill({ skill: data.id });
+            else if (typeof actor.rollAbility === "function") actor.rollAbility(data.id, { type: "skill" });
+          }
+        } catch (err) {
+          console.error(`${MODULE_NAME} | Roll request failed for ${actor.name}`, err);
+        }
+      }
+    }
+  });
+
   window.toggleCollapsible = (event) => {
     const header = event.currentTarget;
     const content = header.nextElementSibling; // Assuming content is the next sibling
