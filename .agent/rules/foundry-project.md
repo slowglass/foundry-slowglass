@@ -1,3 +1,7 @@
+---
+trigger: always_on
+---
+
 # Project Description
 
 ## Key Concepts for Foundry VTT v13 Module Development
