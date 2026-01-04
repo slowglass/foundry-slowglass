@@ -48,7 +48,13 @@ eval zip -r "${ZIP_FILE_NAME}" . ${ZIP_EXCLUDE}
 
 echo "Module zip file created: ${ZIP_FILE_NAME}"
 
-# Copy data to Test server
-/usr/bin/scp -r -O *.js module.json styles lang templates assets \
-    Tardis:/Volume1/Foundry/game-data/13/${TARGET_SERVER_PATH}/Data/modules/foundry-slowglass
-ssh Tardis chown -v -R cjd.vtt /Volume1/Foundry/game-data/13/${TARGET_SERVER_PATH}/Data/modules/foundry-slowglass
+if [ "${TARGET_SERVER_PATH}" == "test" ]; then
+    echo "Copying module to Test server"
+    /usr/bin/scp -r -O *.js module.json styles lang templates assets \
+        Tardis:/Volume1/Foundry/game-data/13/${TARGET_SERVER_PATH}/Data/modules/foundry-slowglass
+    ssh Tardis chown -v -R cjd.vtt /Volume1/Foundry/game-data/13/${TARGET_SERVER_PATH}/Data/modules/foundry-slowglass
+else
+    echo "Copying module to Live server"
+    /usr/bin/scp -r *.js module.json styles lang templates assets \
+        Strax:/home/cjd/services/foundry/${TARGET_SERVER_PATH}/Data/modules/foundry-slowglass
+fi
