@@ -3,12 +3,13 @@ const path = require('path');
 const crypto = require('crypto');
 
 const MACRO_DIR = path.join(__dirname, '..', 'macro');
-const PACK_SRC_DIR = path.join(__dirname, '..', 'src', 'packs', 'macros');
+const PACK_SRC_DIR = path.join(__dirname, '..', '.build', 'packs', 'macros');
 
-// Ensure output directory exists
-if (!fs.existsSync(PACK_SRC_DIR)) {
-    fs.mkdirSync(PACK_SRC_DIR, { recursive: true });
+// Clean and ensure output directory exists
+if (fs.existsSync(PACK_SRC_DIR)) {
+    fs.rmSync(PACK_SRC_DIR, { recursive: true, force: true });
 }
+fs.mkdirSync(PACK_SRC_DIR, { recursive: true });
 
 /**
  * Generates a consistent 16-character ID for a given string.
