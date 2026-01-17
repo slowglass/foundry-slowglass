@@ -1,3 +1,4 @@
+// Icon: Module navigational/pointing-hand.png
 const CHARACTER_NAME = scope.name;
 const characterToken = canvas.tokens.placeables.find(t => t.name === CHARACTER_NAME);
 if (characterToken) {

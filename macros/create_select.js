@@ -1,3 +1,4 @@
+// Icon: Module tools/drafting-compass.png
 // Get the currently selected token
 const selectedToken = canvas.tokens.controlled[0];
 

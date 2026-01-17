@@ -1,6 +1,7 @@
+// Icon: Module tools/eraser-vintage.png
 /**
  * Macro: Clear Old Chat Logs
- * Description: Deletes all chat messages older than 3 months.
+ * Description: Clears chat logs older than a specified number of months.
  */
 
 (async () => {

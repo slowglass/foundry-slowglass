@@ -1,3 +1,4 @@
+// Icon: Module anatomy/brain-mystical.png
 /**
  * Macro: Request Ability Checks & Saves (foundry-slowglass)
  * Presents a fully icon-based dialog to request Saving Throws or Ability Checks.
@@ -5,7 +6,7 @@
 
 (async () => {
     const MODULE_NAME = "foundry-slowglass";
-    const ASSET_PATH = "modules/foundry-slowglass/assets/icons";
+    const ASSET_PATH = "modules/foundry-slowglass/icons";
     const DEFAULT_ICON = "icons/dice/d20black.svg";
 
     // 1. Icon Configuration Arrays
@@ -15,12 +16,12 @@
     };
 
     const ABILITY_ICONS = {
-        str: `${ASSET_PATH}/ability/strength.svg`,
-        dex: `${ASSET_PATH}/ability/dexterity.svg`,
-        con: `${ASSET_PATH}/ability/constitution.svg`,
-        int: `${ASSET_PATH}/ability/intelligence.svg`,
-        wis: `${ASSET_PATH}/ability/wisdom.svg`,
-        cha: `${ASSET_PATH}/ability/charisma.svg`
+        str: `${ASSET_PATH}/abilities/strength.svg`,
+        dex: `${ASSET_PATH}/abilities/dexterity.svg`,
+        con: `${ASSET_PATH}/abilities/constitution.svg`,
+        int: `${ASSET_PATH}/abilities/intelligence.svg`,
+        wis: `${ASSET_PATH}/abilities/wisdom.svg`,
+        cha: `${ASSET_PATH}/abilities/charisma.svg`
     };
 
     const ADV_ICONS = {

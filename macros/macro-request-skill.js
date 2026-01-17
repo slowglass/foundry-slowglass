@@ -1,33 +1,35 @@
+// Icon: Module tools/artisan-tools.png
 /**
+ * Description: Request a skill check for specific actors.
  * Macro: Request Skill Checks (foundry-slowglass)
  * Presents a fully icon-based dialog to request Skill Checks.
  */
 
 (async () => {
     const MODULE_NAME = "foundry-slowglass";
-    const ASSET_PATH = "modules/foundry-slowglass/assets/icons";
+    const ASSET_PATH = "modules/foundry-slowglass/icons";
     const DEFAULT_ICON = "icons/dice/d20black.svg";
 
     // 1. Icon Configuration Arrays
     const SKILL_ICONS = {
-        acr: `${ASSET_PATH}/skill/acrobatics.svg`,
-        ani: `${ASSET_PATH}/skill/animal-handling.svg`,
-        arc: `${ASSET_PATH}/skill/arcana.svg`,
-        ath: `${ASSET_PATH}/skill/athletics.svg`,
-        dec: `${ASSET_PATH}/skill/deception.svg`,
-        his: `${ASSET_PATH}/skill/history.svg`,
-        ins: `${ASSET_PATH}/skill/insight.svg`,
-        itm: `${ASSET_PATH}/skill/intimidation.svg`,
-        inv: `${ASSET_PATH}/skill/investigation.svg`,
-        med: `${ASSET_PATH}/skill/medicine.svg`,
-        nat: `${ASSET_PATH}/skill/nature.svg`,
-        prc: `${ASSET_PATH}/skill/perception.svg`,
-        prf: `${ASSET_PATH}/skill/performance.svg`,
-        per: `${ASSET_PATH}/skill/persuasion.svg`,
-        rel: `${ASSET_PATH}/skill/religion.svg`,
-        slt: `${ASSET_PATH}/skill/sleight-of-hand.svg`,
-        ste: `${ASSET_PATH}/skill/stealth.svg`,
-        sur: `${ASSET_PATH}/skill/survival.svg`
+        acr: `${ASSET_PATH}/skills/acrobatics.svg`,
+        ani: `${ASSET_PATH}/skills/animal-handling.svg`,
+        arc: `${ASSET_PATH}/skills/arcana.svg`,
+        ath: `${ASSET_PATH}/skills/athletics.svg`,
+        dec: `${ASSET_PATH}/skills/deception.svg`,
+        his: `${ASSET_PATH}/skills/history.svg`,
+        ins: `${ASSET_PATH}/skills/insight.svg`,
+        itm: `${ASSET_PATH}/skills/intimidation.svg`,
+        inv: `${ASSET_PATH}/skills/investigation.svg`,
+        med: `${ASSET_PATH}/skills/medicine.svg`,
+        nat: `${ASSET_PATH}/skills/nature.svg`,
+        prc: `${ASSET_PATH}/skills/perception.svg`,
+        prf: `${ASSET_PATH}/skills/performance.svg`,
+        per: `${ASSET_PATH}/skills/persuasion.svg`,
+        rel: `${ASSET_PATH}/skills/religion.svg`,
+        slt: `${ASSET_PATH}/skills/sleight-of-hand.svg`,
+        ste: `${ASSET_PATH}/skills/stealth.svg`,
+        sur: `${ASSET_PATH}/skills/survival.svg`
     };
 
     const ADV_ICONS = {

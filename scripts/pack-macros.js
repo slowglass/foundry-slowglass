@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 
-const MACRO_DIR = path.join(__dirname, '..', 'macro');
+const MACRO_DIR = path.join(__dirname, '..', 'macros');
 const PACK_SRC_DIR = path.join(__dirname, '..', '.build', 'packs', 'macros');
 
 // Clean and ensure output directory exists
@@ -44,7 +44,7 @@ function convertMacro(fileName) {
         "name": macroName,
         "type": "script",
         "author": "slowglass",
-        "img": `modules/foundry-slowglass/icons/macros/${path.basename(fileName, '.js')}.png`,
+        "img": "icons/svg/dice-target.svg", // Default
         "scope": "global",
         "command": content,
         "folder": null,
@@ -65,10 +65,16 @@ function convertMacro(fileName) {
         }
     };
 
-    // Check if custom icon exists, else fallback
-    const iconPath = path.join(__dirname, '..', 'icons', 'macros', `${path.basename(fileName, '.js')}.png`);
-    if (!fs.existsSync(iconPath)) {
-        macroData.img = "icons/svg/dice-target.svg";
+    // Parse metadata comments
+    const lines = content.split('\n');
+    for (const line of lines) {
+        // Match // Icon: Module tools/eraser-vintage.png
+        const iconMatch = line.match(/^\/\/\s*Icon:\s*Module\s+(.*)$/);
+        if (iconMatch) {
+            const iconRelativePath = iconMatch[1].trim();
+            macroData.img = `modules/foundry-slowglass/icons/${iconRelativePath}`;
+            break;
+        }
     }
 
     const outputFileName = `macro_${macroName.replace(/\s+/g, '_')}_${macroId}.json`;

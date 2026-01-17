@@ -37,7 +37,7 @@
     },
     "socket": true,
     "esmodules": [
-        "main.js"
+        "src/main.js"
     ],
     "styles": [
         "styles/main.css"
