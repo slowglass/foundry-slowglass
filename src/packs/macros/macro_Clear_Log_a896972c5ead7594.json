@@ -1,0 +1,24 @@
+{
+  "name": "Clear Log",
+  "type": "script",
+  "author": "slowglass",
+  "img": "modules/foundry-slowglass/icons/macros/clear-log.png",
+  "scope": "global",
+  "command": "/**\n * Macro: Clear Old Chat Logs\n * Description: Deletes all chat messages older than 3 months.\n */\n\n(async () => {\n    // Configuration\n    const MONTHS_TO_KEEP = 3;\n\n    // Calculate the cutoff timestamp\n    const cutoffDate = new Date();\n    cutoffDate.setMonth(cutoffDate.getMonth() - MONTHS_TO_KEEP);\n    const cutoffTimestamp = cutoffDate.getTime();\n\n    // Find messages to delete\n    // game.messages is a Collection of ChatMessage documents\n    const messagesToDelete = game.messages.filter(m => m.timestamp < cutoffTimestamp).map(m => m.id);\n\n    if (messagesToDelete.length === 0) {\n        ui.notifications.info(`No chat messages older than ${MONTHS_TO_KEEP} months found.`);\n        return;\n    }\n\n    // Optional: Confirmation Dialog\n    // Remove the Dialog part if you want this to run silently/automatically\n    new Dialog({\n        title: \"Clear Old Logs\",\n        content: `<p>Found <strong>${messagesToDelete.length}</strong> messages older than ${MONTHS_TO_KEEP} months.</p><p>Are you sure you want to delete them? This cannot be undone.</p>`,\n        buttons: {\n            yes: {\n                icon: '<i class=\"fas fa-trash\"></i>',\n                label: \"Delete\",\n                callback: async () => {\n                    await ChatMessage.deleteDocuments(messagesToDelete);\n                    ui.notifications.info(`Deleted ${messagesToDelete.length} old chat messages.`);\n                }\n            },\n            no: {\n                icon: '<i class=\"fas fa-times\"></i>',\n                label: \"Cancel\"\n            }\n        },\n        default: \"no\"\n    }).render(true);\n})();\n",
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_id": "a896972c5ead7594",
+  "_key": "!macros!a896972c5ead7594",
+  "_stats": {
+    "systemId": "dnd5e",
+    "systemVersion": "4.0.0",
+    "coreVersion": "13.350",
+    "createdTime": 1768663480804,
+    "modifiedTime": 1768663480804,
+    "lastModifiedBy": "slowglass"
+  }
+}

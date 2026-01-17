@@ -48,5 +48,13 @@
             "name": "English",
             "path": "lang/en.json"
         }
+    ],
+    "packs": [
+        {
+            "name": "slowglass-macros",
+            "label": "Slowglass Macros",
+            "path": "packs/slowglass-macros",
+            "type": "Macro"
+        }
     ]
 }

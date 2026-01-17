@@ -1,0 +1,24 @@
+{
+  "name": "Select",
+  "type": "script",
+  "author": "slowglass",
+  "img": "modules/foundry-slowglass/icons/macros/select.png",
+  "scope": "global",
+  "command": "const CHARACTER_NAME = scope.name;\nconst characterToken = canvas.tokens.placeables.find(t => t.name === CHARACTER_NAME);\nif (characterToken) {\n    canvas.tokens.releaseAll();\n    characterToken.control({ releaseOthers: true });\n    canvas.animatePan({\n        x: characterToken.center.x,\n        y: characterToken.center.y,\n        scale: 1.0,\n        duration: 500\n    });\n    ui.notifications.info(`${CHARACTER_NAME} selected!`);\n} else {\n    ui.notifications.error(`Token with name \"${CHARACTER_NAME}\" not found on the scene.`);\n}\n",
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_id": "e0626222614bdee3",
+  "_key": "!macros!e0626222614bdee3",
+  "_stats": {
+    "systemId": "dnd5e",
+    "systemVersion": "4.0.0",
+    "coreVersion": "13.350",
+    "createdTime": 1768663480897,
+    "modifiedTime": 1768663480897,
+    "lastModifiedBy": "slowglass"
+  }
+}
