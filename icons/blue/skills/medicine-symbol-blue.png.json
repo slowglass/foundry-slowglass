@@ -2,5 +2,6 @@
     "blue_threshold": 60,
     "blue_ratio": 1.1,
     "dark_blue_min": 40,
-    "dark_component_max": 80
+    "dark_component_max": 80,
+    "scale": 1.0
 }
