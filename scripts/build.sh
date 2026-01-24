@@ -2,6 +2,21 @@
 set -e
 
 # Create necessary directories
+# Handle config
+CLEAN=false
+
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        --clean) CLEAN=true ;;
+    esac
+    shift
+done
+
+if [ "$CLEAN" = true ]; then
+    echo "Cleaning output directories..."
+    rm -rf icons/transparent icons/paper
+fi
+
 mkdir -p packs
 mkdir -p icons/transparent
 
@@ -12,6 +27,6 @@ fvtt package pack foundry-slowglass --compendiumName slowglass-macros --in ./.bu
 
 # Build Icons
 echo "Processing Icons..."
-python3 scripts/remove_blue.py --input icons/blue --output icons/transparent
+python3 scripts/generate_icons.py --input icons/blue --transparent icons/transparent --paper icons/paper
 
 echo "Build Complete!"
