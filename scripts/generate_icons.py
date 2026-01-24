@@ -64,8 +64,26 @@ def create_paper_icon(transparent_img, output_path, config):
     # Create a copy of the transparent image to adjust alpha
     foreground = transparent_img.copy()
     
+    # Resize foreground based on scale parameter
+    scale = config.get("scale", 1.0)
+    if scale != 1.0:
+        new_width = int(foreground.width * scale)
+        new_height = int(foreground.height * scale)
+        foreground = foreground.resize((new_width, new_height), Image.Resampling.LANCZOS)
+    
+    # Create a canvas of the paper size to center the resized foreground
+    canvas = Image.new("RGBA", paper_base.size, (0, 0, 0, 0))
+    
+    # Calculate centering position
+    x_offset = (paper_base.width - foreground.width) // 2
+    y_offset = (paper_base.height - foreground.height) // 2
+    
+    # Paste resized foreground onto canvas
+    canvas.paste(foreground, (x_offset, y_offset))
+    foreground = canvas
+
     # Apply global alpha to the foreground
-    paper_alpha = config.get("paper_alpha", 0.6)
+    paper_alpha = config.get("paper_alpha", 0.8)
     
     # Get alpha data
     data = foreground.getdata()
@@ -92,7 +110,8 @@ def get_config_for_file(file_path):
         "blue_ratio": 1.1,
         "dark_blue_min": 40,
         "dark_component_max": 80,
-        "paper_alpha": 0.6
+        "paper_alpha": 0.6,
+        "scale": 1.0
     }
     
     if os.path.exists(config_path):
