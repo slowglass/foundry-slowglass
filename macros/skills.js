@@ -1,3 +1,4 @@
+// Icon: Module documents/reference-books.png
 /**
  * Macro: Request Skill Checks (foundry-slowglass)
  * Presents a fully icon-based dialog to request Skill Checks.
@@ -10,30 +11,30 @@
 
     // 1. Icon Configuration Arrays
     const SKILL_ICONS = {
-        acr: `${ASSET_PATH}/skills/acrobatics.svg`,
-        ani: `${ASSET_PATH}/skills/animal-handling.svg`,
-        arc: `${ASSET_PATH}/skills/arcana.svg`,
-        ath: `${ASSET_PATH}/skills/athletics.svg`,
-        dec: `${ASSET_PATH}/skills/deception.svg`,
-        his: `${ASSET_PATH}/skills/history.svg`,
-        ins: `${ASSET_PATH}/skills/insight.svg`,
-        itm: `${ASSET_PATH}/skills/intimidation.svg`,
-        inv: `${ASSET_PATH}/skills/investigation.svg`,
-        med: `${ASSET_PATH}/skills/medicine.svg`,
-        nat: `${ASSET_PATH}/skills/nature.svg`,
-        prc: `${ASSET_PATH}/skills/perception.svg`,
-        prf: `${ASSET_PATH}/skills/performance.svg`,
-        per: `${ASSET_PATH}/skills/persuasion.svg`,
-        rel: `${ASSET_PATH}/skills/religion.svg`,
-        slt: `${ASSET_PATH}/skills/sleight-of-hand.svg`,
-        ste: `${ASSET_PATH}/skills/stealth.svg`,
-        sur: `${ASSET_PATH}/skills/survival.svg`
+        acr: `${ASSET_PATH}/skills/acrobatics.png`,
+        ani: `${ASSET_PATH}/skills/animal-handling.png`,
+        arc: `${ASSET_PATH}/skills/arcana.png`,
+        ath: `${ASSET_PATH}/skills/athletics.png`,
+        dec: `${ASSET_PATH}/skills/deception.png`,
+        his: `${ASSET_PATH}/skills/history.png`,
+        ins: `${ASSET_PATH}/skills/insight.png`,
+        itm: `${ASSET_PATH}/skills/intimidation.png`,
+        inv: `${ASSET_PATH}/skills/investigation.png`,
+        med: `${ASSET_PATH}/skills/medicine.png`,
+        nat: `${ASSET_PATH}/skills/nature.png`,
+        prc: `${ASSET_PATH}/skills/perception.png`,
+        prf: `${ASSET_PATH}/skills/performance.png`,
+        per: `${ASSET_PATH}/skills/persuasion.png`,
+        rel: `${ASSET_PATH}/skills/religion.png`,
+        slt: `${ASSET_PATH}/skills/sleight-of-hand.png`,
+        ste: `${ASSET_PATH}/skills/stealth.png`,
+        sur: `${ASSET_PATH}/skills/survival.png`
     };
 
     const ADV_ICONS = {
-        advantage: `${ASSET_PATH}/dice/advantage.svg`,
-        normal: `${ASSET_PATH}/dice/d20.svg`,
-        disadvantage: `${ASSET_PATH}/dice/disadvantage.svg`
+        advantage: `${ASSET_PATH}/dice/advantage.png`,
+        normal: `${ASSET_PATH}/dice/d20.png`,
+        disadvantage: `${ASSET_PATH}/dice/disadvantage.png`
     };
 
     // 2. Gather Data from CONFIG

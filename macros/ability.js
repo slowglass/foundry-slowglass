@@ -11,23 +11,23 @@
 
     // 1. Icon Configuration Arrays
     const MODE_ICONS = {
-        save: `${ASSET_PATH}/attribute/saving-throw.svg`,
-        check: `${ASSET_PATH}/attribute/test.svg`
+        save: `${ASSET_PATH}/attributes/saving-throw.png`,
+        check: `${ASSET_PATH}/attributes/skillcheck.png`
     };
 
     const ABILITY_ICONS = {
-        str: `${ASSET_PATH}/abilities/strength.svg`,
-        dex: `${ASSET_PATH}/abilities/dexterity.svg`,
-        con: `${ASSET_PATH}/abilities/constitution.svg`,
-        int: `${ASSET_PATH}/abilities/intelligence.svg`,
-        wis: `${ASSET_PATH}/abilities/wisdom.svg`,
-        cha: `${ASSET_PATH}/abilities/charisma.svg`
+        str: `${ASSET_PATH}/abilities/strength.png`,
+        dex: `${ASSET_PATH}/abilities/dexterity.png`,
+        con: `${ASSET_PATH}/abilities/constitution.png`,
+        int: `${ASSET_PATH}/abilities/intelligence.png`,
+        wis: `${ASSET_PATH}/abilities/wisdom.png`,
+        cha: `${ASSET_PATH}/abilities/charisma.png`
     };
 
     const ADV_ICONS = {
-        advantage: `${ASSET_PATH}/dice/advantage.svg`,
-        normal: `${ASSET_PATH}/dice/d20.svg`,
-        disadvantage: `${ASSET_PATH}/dice/disadvantage.svg`
+        advantage: `${ASSET_PATH}/dice/advantage.png`,
+        normal: `${ASSET_PATH}/dice/d20.png`,
+        disadvantage: `${ASSET_PATH}/dice/disadvantage.png`
     };
 
     // 2. Gather Data from CONFIG
@@ -81,7 +81,7 @@
             justify-content: center;
             gap: 4px;
             margin-bottom: 12px; 
-            width: 230px;
+            width: 100%;
             margin-left: auto;
             margin-right: auto;
             padding: 0;
@@ -264,5 +264,5 @@
                 // Keeping selection for now.
             });
         }
-    }).render(true);
+    }, { width: 450 }).render(true);
 })();
