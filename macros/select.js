@@ -1,4 +1,7 @@
+// Macro Name: Select Token
+// Description: Selects a token on the current scene by name.
 // Icon: Module navigational/pointing-hand.png
+
 const CHARACTER_NAME = scope.name;
 const characterToken = canvas.tokens.placeables.find(t => t.name === CHARACTER_NAME);
 if (characterToken) {

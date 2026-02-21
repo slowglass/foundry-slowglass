@@ -1,8 +1,6 @@
+// Macro Name: Clear Old Chat Logs
+// Description: Clears chat logs older than a specified number of months.
 // Icon: Module tools/eraser-vintage.png
-/**
- * Macro: Clear Old Chat Logs
- * Description: Clears chat logs older than a specified number of months.
- */
 
 (async () => {
     // Configuration

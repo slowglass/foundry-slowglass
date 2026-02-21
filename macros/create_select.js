@@ -1,4 +1,7 @@
+// Macro Name: Create Select Token Macro
+// Description: Creates a selector macro for the currently selected token.
 // Icon: Module tools/drafting-compass.png
+
 // Get the currently selected token
 const selectedToken = canvas.tokens.controlled[0];
 

@@ -1,8 +1,6 @@
+// Macro Name: Request Ability Checks & Saves
+// Description: Presents a fully icon-based dialog to request Saving Throws or Ability Checks.
 // Icon: Module anatomy/brain-mystical.png
-/**
- * Macro: Request Ability Checks & Saves (foundry-slowglass)
- * Presents a fully icon-based dialog to request Saving Throws or Ability Checks.
- */
 
 (async () => {
     const MODULE_NAME = "foundry-slowglass";

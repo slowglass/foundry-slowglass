@@ -1,8 +1,6 @@
+// Macro Name: Request Skill Checks (Alternate)
+// Description: Presents a fully icon-based dialog to request Skill Checks.
 // Icon: Module documents/reference-books.png
-/**
- * Macro: Request Skill Checks (foundry-slowglass)
- * Presents a fully icon-based dialog to request Skill Checks.
- */
 
 (async () => {
     const MODULE_NAME = "foundry-slowglass";

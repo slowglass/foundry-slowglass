@@ -54,7 +54,6 @@ function convertMacro(fileName) {
         },
         "flags": {},
         "_id": macroId,
-        "_key": `!macros!${macroId}`,
         "_stats": {
             "systemId": "dnd5e",
             "systemVersion": "4.0.0",
@@ -68,11 +67,17 @@ function convertMacro(fileName) {
     // Parse metadata comments
     const lines = content.split('\n');
     for (const line of lines) {
-        // Match // Icon: Module tools/eraser-vintage.png
-        const iconMatch = line.match(/^\/\/\s*Icon:\s*Module\s+(.*)$/);
+        // Match: // Icon: Module [path] OR // Icon: Core [path]
+        const iconMatch = line.match(/^\/\/\s*Icon:\s*(Module|Core)\s+(.*)$/i);
         if (iconMatch) {
-            const iconRelativePath = iconMatch[1].trim();
-            macroData.img = `modules/foundry-slowglass/icons/${iconRelativePath}`;
+            const sourceType = iconMatch[1].toLowerCase();
+            const iconPath = iconMatch[2].trim();
+
+            if (sourceType === 'module') {
+                macroData.img = `modules/foundry-slowglass/icons/${iconPath}`;
+            } else if (sourceType === 'core') {
+                macroData.img = `icons/${iconPath}`;
+            }
             break;
         }
     }
