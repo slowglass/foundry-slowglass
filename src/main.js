@@ -4,7 +4,7 @@ import { EncounterTracker } from "./encounter-tracker.js";
 import { AttackRollHandler } from "./attack-roll-handler.js";
 import { RollDataHandler } from "./roll-data-handler.js";
 import { ChatHandler } from "./chat-handler.js";
-import { KruckRageHandler } from "./kruck-rage-handler.js";
+import { WorldTreeRageHandler } from "./path-of-the-world-tree-rage-handler.js";
 
 Hooks.once('init', () => {
   console.log(`${MODULE_NAME} | Initializing`);
@@ -48,9 +48,11 @@ Hooks.once('ready', async () => {
   Hooks.on("combatStart", encounterTracker._storeInitialCounts.bind(encounterTracker));
   Hooks.on("deleteCombat", encounterTracker._calculateAndReportUsage.bind(encounterTracker));
 
-  // Kruck Rage Handler for granting temp HP on turn start
-  const kruckRageHandler = new KruckRageHandler();
-  Hooks.on("combatTurnChange", kruckRageHandler.handleCombatTurnChange.bind(kruckRageHandler));
+  // World Tree Rage Handler for granting temp HP on turn start
+  const worldTreeRageHandler = new WorldTreeRageHandler();
+  Hooks.on("updateCombat", worldTreeRageHandler.onUpdateCombat.bind(worldTreeRageHandler));
+  Hooks.on("dnd5e.useItem", worldTreeRageHandler.onUseItem.bind(worldTreeRageHandler));
+  Hooks.on("dnd5e.postUseActivity", worldTreeRageHandler.onUseActivity.bind(worldTreeRageHandler));
 
   // Socket listener for Roll Requests (Saves, Checks, Skills)
   game.socket.on(`module.${MODULE_NAME}`, (data) => {
@@ -98,8 +100,10 @@ Hooks.once('ready', async () => {
         // Always trigger the standard dnd5e dialog
         triggerRoll(advantageMode);
       }
-    } else if (data.type === "kruckRageNotification") {
-      KruckRageHandler.handleSocketMessage(data);
+    }
+    // Handle World Tree Rage notifications
+    if (data.type === "worldTreeRageNotification") {
+      WorldTreeRageHandler.handleSocketMessage(data);
     }
   });
 
