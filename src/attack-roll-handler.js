@@ -73,6 +73,7 @@ export class AttackRollHandler {
      */
     _captureOriginatingId(config, dialog, message) {
         const messageId = message.data?.["flags.dnd5e.originatingMessage"]
+            || foundry.utils.getProperty(message, "flags.dnd5e.originatingMessage")
             || foundry.utils.getProperty(message, "data.flags.dnd5e.originatingMessage")
             || config.event?.target?.closest("[data-message-id]")?.dataset.messageId;
 
@@ -95,7 +96,7 @@ export class AttackRollHandler {
 
         let changed = false;
         if (attack !== null) {
-            const btn = div.querySelector('button[data-action="rollAttack"]');
+            const btn = div.querySelector('button[data-action="rollAttack"], button[data-action="attack"]');
             if (btn) {
                 if (attack) btn.setAttribute("disabled", "");
                 else btn.removeAttribute("disabled");
@@ -103,7 +104,7 @@ export class AttackRollHandler {
             }
         }
         if (damage !== null) {
-            const btn = div.querySelector('button[data-action="rollDamage"], button[data-action="rollHealing"], button[data-action="healing"]');
+            const btn = div.querySelector('button[data-action="rollDamage"], button[data-action="damage"], button[data-action="rollHealing"], button[data-action="healing"]');
             if (btn) {
                 if (damage) btn.setAttribute("disabled", "");
                 else btn.removeAttribute("disabled");
@@ -233,7 +234,7 @@ export class AttackRollHandler {
 
         const div = document.createElement("div");
         div.innerHTML = usageMessage.content;
-        const attackButton = div.querySelector('button[data-action="rollAttack"]');
+        const attackButton = div.querySelector('button[data-action="rollAttack"], button[data-action="attack"]');
 
         if (attackButton) {
             const rollWrapper = document.createElement("div");
@@ -255,7 +256,7 @@ export class AttackRollHandler {
             attackButton.replaceWith(diceRoll);
 
             // Re-enable damage button
-            const damageButton = div.querySelector('button[data-action="rollDamage"], button[data-action="rollHealing"], button[data-action="healing"]');
+            const damageButton = div.querySelector('button[data-action="rollDamage"], button[data-action="damage"], button[data-action="rollHealing"], button[data-action="healing"]');
             if (damageButton) damageButton.removeAttribute("disabled");
 
             await usageMessage.update({ content: div.innerHTML });
@@ -275,7 +276,7 @@ export class AttackRollHandler {
 
         const div = document.createElement("div");
         div.innerHTML = usageMessage.content;
-        const damageButton = div.querySelector('button[data-action="rollDamage"], button[data-action="rollHealing"], button[data-action="healing"]');
+        const damageButton = div.querySelector('button[data-action="rollDamage"], button[data-action="damage"], button[data-action="rollHealing"], button[data-action="healing"]');
 
         if (damageButton) {
             const roll = rolls[0];
