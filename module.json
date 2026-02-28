@@ -5,7 +5,7 @@
     "description": "A general-purpose Foundry VTT module designed for players in Eccles Road Games, compatible with Foundry VTT Version 13. This module provides various helper functions and enhancements to improve the gaming experience.",
     "url": "https://github.com/slowglass/foundry-slowglass",
     "manifest": "https://github.com/slowglass/foundry-slowglass/releases/latest/download/module.json",
-    "download": "https://github.com/slowglass/foundry-slowglass/releases/download/v0.0.2-SNAPSHOT/module.zip",
+    "download": "https://github.com/slowglass/foundry-slowglass/releases/latest/download/module.zip",
     "bugs": "https://github.com/slowglass/foundry-slowglass/issues",
     "readme": "https://github.com/slowglass/foundry-slowglass/main/README.md",
     "license": "https://mit-license.org/",
