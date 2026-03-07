@@ -1,250 +1,123 @@
-// Macro Name: Request Skill Checks (Alternate)
-// Description: Presents a fully icon-based dialog to request Skill Checks.
-// Icon: Module documents/reference-books.png
+/**
+ * Macro: Request Skill Checks (Isolated CSS)
+ * Renamed classes to .skill-request-dialog to prevent style bleeding.
+ */
 
 (async () => {
     const MODULE_NAME = "foundry-slowglass";
-    const ASSET_PATH = "modules/foundry-slowglass/icons";
-    const DEFAULT_ICON = "icons/dice/d20black.svg";
-
-    // 1. Icon Configuration Arrays
-    const SKILL_ICONS = {
-        acr: `${ASSET_PATH}/skills/acrobatics.png`,
-        ani: `${ASSET_PATH}/skills/animal-handling.png`,
-        arc: `${ASSET_PATH}/skills/arcana.png`,
-        ath: `${ASSET_PATH}/skills/athletics.png`,
-        dec: `${ASSET_PATH}/skills/deception.png`,
-        his: `${ASSET_PATH}/skills/history.png`,
-        ins: `${ASSET_PATH}/skills/insight.png`,
-        itm: `${ASSET_PATH}/skills/intimidation.png`,
-        inv: `${ASSET_PATH}/skills/investigation.png`,
-        med: `${ASSET_PATH}/skills/medicine.png`,
-        nat: `${ASSET_PATH}/skills/nature.png`,
-        prc: `${ASSET_PATH}/skills/perception.png`,
-        prf: `${ASSET_PATH}/skills/performance.png`,
-        per: `${ASSET_PATH}/skills/persuasion.png`,
-        rel: `${ASSET_PATH}/skills/religion.png`,
-        slt: `${ASSET_PATH}/skills/sleight-of-hand.png`,
-        ste: `${ASSET_PATH}/skills/stealth.png`,
-        sur: `${ASSET_PATH}/skills/survival.png`
-    };
-
-    const ADV_ICONS = {
-        advantage: `${ASSET_PATH}/dice/advantage.png`,
-        normal: `${ASSET_PATH}/dice/d20.png`,
-        disadvantage: `${ASSET_PATH}/dice/disadvantage.png`
-    };
-
-    // 2. Gather Data from CONFIG
     const skills = CONFIG.DND5E.skills;
 
-    // 3. Build Category Data (Icon-based Buttons)
-    const advBtnHtml = Object.entries(ADV_ICONS).map(([mode, icon]) => {
-        const label = mode.charAt(0).toUpperCase() + mode.slice(1);
-        return `<button type="button" class="adv-btn ${mode === 'normal' ? 'active' : ''}" data-adv="${mode}" title="${label}">
-            <img src="${icon}" />
-        </button>`;
-    }).join("");
+    const advBtnHtml = `
+        <button type="button" class="adv-btn" data-adv="advantage" title="Advantage"><span class="adv-label">ADV</span></button>
+        <button type="button" class="adv-btn active" data-adv="normal" title="Normal"><span class="adv-label">NORM</span></button>
+        <button type="button" class="adv-btn" data-adv="disadvantage" title="Disadvantage"><span class="adv-label">DIS</span></button>
+    `;
 
     const skillBtns = Object.entries(skills)
         .sort((a, b) => a[1].label.localeCompare(b[1].label))
         .map(([id, data]) => {
-            const icon = SKILL_ICONS[id] || DEFAULT_ICON;
             return `<button type="button" class="id-btn" data-id="${id}" title="${data.label}">
-                <img src="${icon}" />
+                <span class="skill-label">${data.label}</span>
             </button>`;
         }).join("");
 
-    // 4. Gather Potential Actors (Player-owned)
-    const actors = game.actors.filter(a => a.hasPlayerOwner);
+    const playerCharacters = game.actors.filter(a => a.type === "character" && a.hasPlayerOwner);
+    const sceneOwnedNpcs = canvas.tokens.placeables
+        .filter(t => t.actor && t.actor.type === "npc" && t.actor.hasPlayerOwner)
+        .map(t => t.actor);
+
+    const actors = Array.from(new Set([...playerCharacters, ...sceneOwnedNpcs]));
     const targetedUuids = Array.from(game.user.targets).map(t => t.actor?.uuid);
 
     const actorPortraits = actors.map(a => {
-        const imgSrc = a.prototypeToken?.texture?.src || a.img;
+        const imgSrc = a.img || a.prototypeToken?.texture?.src;
         const isSelected = targetedUuids.includes(a.uuid);
-        return `
-            <div class="actor-portrait ${isSelected ? 'active' : ''}" data-uuid="${a.uuid}" title="${a.name}">
-                <img src="${imgSrc}" />
-            </div>
-        `;
+        return `<div class="actor-portrait ${isSelected ? 'active' : ''}" data-uuid="${a.uuid}" title="${a.name}"><img src="${imgSrc}" /></div>`;
     }).join("");
 
-    // 5. Build Dialog Content
     const content = `
     <style>
-        .roll-request-dialog { overflow: visible; }
-        .roll-request-dialog .section-label { font-weight: bold; display: block; margin-bottom: 8px; border-bottom: 1px solid #7a7971; padding-bottom: 2px; }
+        .skill-request-dialog { overflow: visible; font-family: "Signika", sans-serif; }
+        .skill-request-dialog .mode-selection { display: flex; justify-content: center; gap: 6px; margin-bottom: 8px; }
         
-        .roll-request-dialog .btn-grid { 
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 0px; 
-            margin-bottom: 20px; 
-            width: 100%;
-            padding: 0 10px;
-            margin-left: 0;
-            margin-right: 0;
-        }
-        
-        .roll-request-dialog .mode-selection {
-            display: flex;
-            justify-content: center;
-            gap: 0px;
-            width: 100%;
-            margin-bottom: 20px;
+        .skill-request-dialog hr {
+            border: 0;
+            border-top: 1px solid #7a7971;
+            margin: 10px 0;
+            opacity: 0.5;
         }
 
-        .roll-request-dialog .mode-divider {
-            width: 1px;
-            height: 100%;
-            background: #7a7971;
-            margin: 0 auto;
-        }
-
-        .roll-request-dialog button {
-            padding: 2px;
-            cursor: pointer;
-            border: 1px solid #7a7971;
-            background: rgba(0,0,0,0.1);
-            width: 64px;
-            height: 64px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .roll-request-dialog button img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            opacity: 1.0 !important;
-        }
-        .roll-request-dialog button.active {
-            border: 3px solid #ff6400 !important;
-            box-shadow: 0 0 12px #ff6400 !important;
-            background: none !important;
-        }
+        .skill-request-dialog .btn-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px; margin-bottom: 10px; }
         
-        .roll-request-dialog .actor-grid { 
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 0px;
-            max-height: 400px; 
-            overflow-y: auto; 
-            margin-top: 10px;
-            width: 100%;
-            padding: 0 10px;
-            margin-left: 0;
-            margin-right: 0;
+        .skill-request-dialog button {
+            cursor: pointer; border: 1px solid #7a7971; background: rgba(0,0,0,0.05);
+            width: 115px; height: 34px; display: flex; align-items: center; justify-content: center;
+            transition: all 0.1s ease; border-radius: 3px; padding: 2px;
         }
 
-        .roll-request-dialog .actor-portrait {
-            position: relative;
-            cursor: pointer;
-            border: 1px solid #7a7971;
-            width: 96px;
-            height: 96px;
-            overflow: hidden;
-            background: rgba(0,0,0,0.1);
-            transition: all 0.2s ease;
-            box-sizing: border-box;
+        .skill-request-dialog .adv-label { font-size: 0.9em; font-weight: bold; }
+        .skill-request-dialog .skill-label { font-size: 0.75em; font-weight: bold; text-transform: uppercase; text-align: center; line-height: 1; }
+
+        .skill-request-dialog button.active { border: 2px solid #ff6400 !important; background: rgba(255, 100, 0, 0.1) !important; }
+        .skill-request-dialog button.active span { color: #ff6400; }
+
+        .skill-request-dialog .actor-grid { 
+            display: flex; flex-wrap: wrap; justify-content: center; gap: 6px;
+            max-height: 180px; overflow-y: auto; padding: 8px;
+            border-top: 1px solid #7a7971; background: rgba(0,0,0,0.05);
         }
-        .roll-request-dialog .actor-portrait img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            opacity: 1.0 !important;
+
+        .skill-request-dialog .actor-portrait {
+            cursor: pointer; border: 1px solid #7a7971; width: 48px; height: 48px;
+            border-radius: 3px; overflow: hidden; background: #222;
         }
-        .roll-request-dialog .actor-portrait.active {
-            border: 3px solid #ff6400 !important;
-            box-shadow: 0 0 12px #ff6400 !important;
-            background: none !important;
-        }
+        .skill-request-dialog .actor-portrait img { width: 100%; height: 100%; object-fit: cover; }
+        .skill-request-dialog .actor-portrait.active { border: 3px solid #ff6400 !important; box-shadow: 0 0 5px #ff6400; }
     </style>
     
-    <div class="roll-request-dialog">
-        <div class="mode-selection">
-            ${advBtnHtml}
-        </div>
-        <input type="hidden" id="roll-type" value="skill">
+    <div class="skill-request-dialog">
+        <div class="mode-selection">${advBtnHtml}</div>
+        <hr>
+        <div id="selection-grid" class="btn-grid">${skillBtns}</div>
         <input type="hidden" id="roll-adv" value="normal">
-
-        <div id="selection-grid" class="btn-grid">
-            ${skillBtns}
-        </div>
         <input type="hidden" id="roll-id" value="">
-
-        <div class="actor-grid">
-            ${actorPortraits || "<em>No player characters found.</em>"}
-        </div>
+        <div class="actor-grid">${actorPortraits || "<em>No actors found.</em>"}</div>
     </div>
     `;
 
-    // 6. Render Dialog
     new Dialog({
-        title: "Request Skill Check",
+        title: "Skill Request",
         content: content,
         buttons: {
             request: {
                 icon: '<i class="fas fa-bullhorn"></i>',
-                label: "Request",
+                label: "Send Request",
                 callback: (html) => {
-                    const rollType = "skill";
                     const advantageMode = html.find('#roll-adv').val();
                     const id = html.find('#roll-id').val();
                     const selectedUuids = html.find('.actor-portrait.active').map((i, el) => $(el).data('uuid')).get();
-
-                    if (!id) {
-                        ui.notifications.warn("No Skill selected.");
-                        return false;
-                    }
-                    if (selectedUuids.length === 0) {
-                        ui.notifications.warn("No actors selected.");
-                        return false;
-                    }
+                    if (!id || selectedUuids.length === 0) return ui.notifications.warn("Select a skill and target an actor.");
 
                     game.socket.emit("module." + MODULE_NAME, {
-                        type: "requestRoll",
-                        actorUuids: selectedUuids,
-                        rollType: rollType,
-                        id: id,
-                        advantageMode: advantageMode
+                        type: "requestRoll", actorUuids: selectedUuids,
+                        rollType: "skill", id: id, advantageMode: advantageMode
                     });
-
-                    ui.notifications.info(`Requested ${id.toUpperCase()} ${rollType} (${advantageMode}) from ${selectedUuids.length} actor(s).`);
                 }
             }
         },
         default: "request",
         render: (html) => {
-            const advBtns = html.find('.adv-btn');
-            const selectionGrid = html.find('#selection-grid');
-            const rollAdvInput = html.find('#roll-adv');
-            const rollIdInput = html.find('#roll-id');
-            const actorGrid = html.find('.actor-grid');
-
-            // Handle Actor Portrait clicks
-            actorGrid.on('click', '.actor-portrait', (event) => {
-                const portrait = $(event.currentTarget);
-                portrait.toggleClass('active');
+            html.find('.actor-portrait').click(ev => $(ev.currentTarget).toggleClass('active'));
+            html.find('.id-btn').click(ev => {
+                html.find('.id-btn').removeClass('active');
+                $(ev.currentTarget).addClass('active');
+                html.find('#roll-id').val($(ev.currentTarget).data('id'));
             });
-
-            // Handle ID button clicks
-            selectionGrid.on('click', '.id-btn', (event) => {
-                const btn = $(event.currentTarget);
-                selectionGrid.find('.id-btn').removeClass('active');
-                btn.addClass('active');
-                rollIdInput.val(btn.data('id'));
-            });
-
-            // Handle Advantage Mode switching
-            advBtns.on('click', (event) => {
-                const btn = $(event.currentTarget);
-                advBtns.removeClass('active');
-                btn.addClass('active');
-                rollAdvInput.val(btn.data('adv'));
+            html.find('.adv-btn').click(ev => {
+                html.find('.adv-btn').removeClass('active');
+                $(ev.currentTarget).addClass('active');
+                html.find('#roll-adv').val($(ev.currentTarget).data('adv'));
             });
         }
-    }).render(true);
+    }, { width: 400 }).render(true);
 })();
