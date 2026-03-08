@@ -67,13 +67,15 @@ export class JournalManager {
       }
 
       // Ensure the Releases page exists and is up to date
-      const releasesPage = journal.pages.getName("Releases");
+      const releasesPage = journal.pages.find(p => p.name === "Releases");
       if (releasesPage) {
+        console.log(`Foundry-Slowglass | Updating "Releases" page (content length: ${RELEASES_MD?.length ?? 0})`);
         await releasesPage.update({
           "text.content": RELEASES_MD,
           "text.format": CONST.JOURNAL_ENTRY_PAGE_FORMATS.MARKDOWN
         });
       } else {
+        console.log(`Foundry-Slowglass | Creating "Releases" page`);
         await JournalEntryPage.create({
           name: "Releases",
           type: "text",
