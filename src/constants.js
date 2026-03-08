@@ -1,2 +1,2 @@
 export const MODULE_NAME = 'foundry-slowglass';
-export const MODULE_VERSION = '0.0.29';
+export const MODULE_VERSION = '0.0.32-snapshot';

@@ -70,10 +70,12 @@ export class JournalManager {
       const releasesPage = journal.pages.find(p => p.name === "Releases");
       if (releasesPage) {
         console.log(`Foundry-Slowglass | Updating "Releases" page (content length: ${RELEASES_MD?.length ?? 0})`);
-        await releasesPage.update({
+        const result = await journal.updateEmbeddedDocuments("JournalEntryPage", [{
+          _id: releasesPage.id,
           "text.content": RELEASES_MD,
           "text.format": CONST.JOURNAL_ENTRY_PAGE_FORMATS.MARKDOWN
-        });
+        }]);
+        console.log(`Foundry-Slowglass | Update result:`, result);
       } else {
         console.log(`Foundry-Slowglass | Creating "Releases" page`);
         await JournalEntryPage.create({
