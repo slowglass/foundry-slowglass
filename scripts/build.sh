@@ -25,6 +25,9 @@ echo "Building Macros..."
 node scripts/pack-macros.js
 fvtt package pack foundry-slowglass --compendiumName slowglass-macros --in ./.build/packs/macros --out ./packs --compendiumType Macro
 
+echo "Generating Releases..."
+node scripts/generate-releases.js
+
 # Build Icons
 echo "Processing Icons..."
 python3 scripts/generate_icons.py --input icons/blue --transparent icons/transparent --paper icons/paper
