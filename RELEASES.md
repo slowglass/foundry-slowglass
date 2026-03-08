@@ -1,15 +1,25 @@
 # Release Notes
 
+## Pre release
+
+- Migrate Release notes to markdown
+- Extract release notes into a Releases journal page
+- Use object replace for journal ownership update
+- Clean up journal manager comments
+- Revert journal update syntax
+- Improve journal update payload
+- Improve journal default text formatting
+- Fix journal ownership check
+- Add auto-opening journals for Foundry-Slowglass and Game
+- Small tweaks
+- Start 0.0.32-snapshot development cycle
+
 ## v0.0.31
 
-- Release v0.0.31
-- Use 'latest' release tag for download URL
-- Start 0.0.31-snapshot development cycle
+- More work on the release process
 
 ## v0.0.30
 
-- Release v0.0.30
-- Start 0.0.30-snapshot development cycle
 - Add and update skills for releasing and updating the module.
 
 ## v0.0.3
