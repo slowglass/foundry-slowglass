@@ -1,4 +1,4 @@
-export const RELEASES_MD = `# Release Notes
+# Release Notes
 
 ## v0.0.31
 
@@ -73,4 +73,3 @@ export const RELEASES_MD = `# Release Notes
 - Initial commit
 - Initial commit
 
-`;

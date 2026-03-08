@@ -1,4 +1,4 @@
-import { RELEASES_HTML } from "./releases.js";
+import { RELEASES_MD } from "./releases.js";
 
 export class JournalManager {
   static init() {
@@ -43,8 +43,8 @@ export class JournalManager {
             name: "Releases",
             type: "text",
             text: {
-              content: RELEASES_HTML,
-              format: CONST.JOURNAL_ENTRY_PAGE_FORMATS.HTML
+              content: RELEASES_MD,
+              format: CONST.JOURNAL_ENTRY_PAGE_FORMATS.MARKDOWN
             }
           }
         ]
@@ -69,14 +69,17 @@ export class JournalManager {
       // Ensure the Releases page exists and is up to date
       const releasesPage = journal.pages.getName("Releases");
       if (releasesPage) {
-        await releasesPage.update({ "text.content": RELEASES_HTML });
+        await releasesPage.update({
+          "text.content": RELEASES_MD,
+          "text.format": CONST.JOURNAL_ENTRY_PAGE_FORMATS.MARKDOWN
+        });
       } else {
         await JournalEntryPage.create({
           name: "Releases",
           type: "text",
           text: {
-            content: RELEASES_HTML,
-            format: CONST.JOURNAL_ENTRY_PAGE_FORMATS.HTML
+            content: RELEASES_MD,
+            format: CONST.JOURNAL_ENTRY_PAGE_FORMATS.MARKDOWN
           }
         }, { parent: journal });
       }
