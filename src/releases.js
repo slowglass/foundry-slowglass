@@ -1,15 +1,24 @@
 export const RELEASES_MD = `# Release Notes
 
+## Pre release
+
+- Migrate Release notes to markdown
+- Extract release notes into a Releases journal page
+- Use object replace for journal ownership update
+- Clean up journal manager comments
+- Revert journal update syntax
+- Improve journal update payload
+- Improve journal default text formatting
+- Fix journal ownership check
+- Add auto-opening journals for Foundry-Slowglass and Game
+- Small tweaks
+
 ## v0.0.31
 
-- Release v0.0.31
-- Use 'latest' release tag for download URL
-- Start 0.0.31-snapshot development cycle
+- More work on the release process
 
 ## v0.0.30
 
-- Release v0.0.30
-- Start 0.0.30-snapshot development cycle
 - Add and update skills for releasing and updating the module.
 
 ## v0.0.3
@@ -65,7 +74,6 @@ export const RELEASES_MD = `# Release Notes
 - feat: Add build.sh script for Linux environments
 - Refactor: Introduce ActorManager class and rename file (#2)
 - Big death (#1)
-- chore: Increment snapshot version to 0.0.2-SNAPSHOT
 
 ## v0.0.1
 

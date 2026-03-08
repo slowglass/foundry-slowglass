@@ -12,7 +12,6 @@
 - Fix journal ownership check
 - Add auto-opening journals for Foundry-Slowglass and Game
 - Small tweaks
-- Start 0.0.32-snapshot development cycle
 
 ## v0.0.31
 
@@ -75,7 +74,6 @@
 - feat: Add build.sh script for Linux environments
 - Refactor: Introduce ActorManager class and rename file (#2)
 - Big death (#1)
-- chore: Increment snapshot version to 0.0.2-SNAPSHOT
 
 ## v0.0.1
 
