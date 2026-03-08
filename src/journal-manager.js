@@ -43,20 +43,18 @@ export class JournalManager {
       journal = await JournalEntry.create(journalData);
     } else {
       let isChanged = false;
-      const updates = { _id: journal.id };
 
       // Ensure observer access default
+      // Note: journal.ownership returns an object. To update ownership in foundry,
+      // it is easiest to update the "ownership.default" key specifically
       const currentOwnership = journal.ownership?.default ?? 0;
       if (currentOwnership < CONST.DOCUMENT_OWNERSHIP_LEVELS.OBSERVER) {
          isChanged = true;
-         // Foundry needs ownership updates to replace the whole object or target specific keys
-         updates.ownership = journal.ownership;
-         updates.ownership.default = CONST.DOCUMENT_OWNERSHIP_LEVELS.OBSERVER;
       }
 
       if(isChanged) {
         console.log(`Foundry-Slowglass | Updating observer access for "${name}"`);
-        await journal.update(updates);
+        await journal.update({ "ownership.default": CONST.DOCUMENT_OWNERSHIP_LEVELS.OBSERVER });
       }
     }
   }
