@@ -42,17 +42,19 @@ export class JournalManager {
       journal = await JournalEntry.create(journalData);
     } else {
       let isChanged = false;
+      const updates = {};
+      const newOwnership = foundry.utils.deepClone(journal.ownership);
 
       // Ensure observer access default
-      // default ownership is stored as an integer flag on DocumentOwnership configuration
-      const currentOwnership = journal.ownership?.default ?? 0;
+      const currentOwnership = newOwnership?.default ?? 0;
       if (currentOwnership < CONST.DOCUMENT_OWNERSHIP_LEVELS.OBSERVER) {
          isChanged = true;
+         newOwnership.default = CONST.DOCUMENT_OWNERSHIP_LEVELS.OBSERVER;
       }
 
       if(isChanged) {
         console.log(`Foundry-Slowglass | Updating observer access for "${name}"`);
-        await journal.update({ "ownership.default": CONST.DOCUMENT_OWNERSHIP_LEVELS.OBSERVER });
+        await journal.update({ "ownership": newOwnership });
       }
     }
   }
