@@ -12,7 +12,7 @@ export class JournalManager {
 
     await this._createJournalIfNotExists(
       "Foundry-Slowglass",
-      "<p>Contains a list of all the changes made per release.</p><p>Any changes made should be added to the pr-release section until a formal release is made.</p>"
+      "<p>Contains a list of all the changes made per release.</p><h2>pr-release</h2><p>Any changes made should be added to the pr-release section until a formal release is made.</p>"
     );
     await this._createJournalIfNotExists("Game", "<p>Game journal</p>");
 
