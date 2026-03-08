@@ -41,7 +41,7 @@ export class JournalManager {
       };
       journal = await JournalEntry.create(journalData);
     } else {
-      const currentOwnership = journal.ownership.default;
+      const currentOwnership = journal.ownership?.default ?? 0;
       if (currentOwnership < CONST.DOCUMENT_OWNERSHIP_LEVELS.OBSERVER) {
         console.log(`Foundry-Slowglass | Updating observer access for "${name}"`);
         await journal.update({
