@@ -5,6 +5,7 @@ import { AttackRollHandler } from "./attack-roll-handler.js";
 import { RollDataHandler } from "./roll-data-handler.js";
 import { ChatHandler } from "./chat-handler.js";
 import { WorldTreeRageHandler } from "./path-of-the-world-tree-rage-handler.js";
+import { JournalManager } from "./journal-manager.js";
 
 Hooks.once('init', () => {
   console.log(`${MODULE_NAME} | Initializing`);
@@ -26,6 +27,9 @@ Hooks.once('init', () => {
 
 Hooks.once('ready', async () => {
   console.log(`✅ ${MODULE_NAME} | Ready`);
+
+  // Initialize and ensure journals exist
+  JournalManager.init();
 
   // Actor Manager for status effects
   const actorManager = new ActorManager();
