@@ -21,7 +21,6 @@ export class JournalManager {
   }
 
   static async _createJournalIfNotExists(name, initialContent) {
-    // Only the GM can do this check anyway as per the first early break above
     let journal = game.journal.getName(name);
 
     if (!journal) {
@@ -45,8 +44,7 @@ export class JournalManager {
       let isChanged = false;
 
       // Ensure observer access default
-      // Note: journal.ownership returns an object. To update ownership in foundry,
-      // it is easiest to update the "ownership.default" key specifically
+      // default ownership is stored as an integer flag on DocumentOwnership configuration
       const currentOwnership = journal.ownership?.default ?? 0;
       if (currentOwnership < CONST.DOCUMENT_OWNERSHIP_LEVELS.OBSERVER) {
          isChanged = true;
