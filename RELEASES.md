@@ -1,7 +1,7 @@
 # Release Notes
 
 ## Pre release
-- **Atomic Silent Initiative**: Refactored the `Setup Auto-Encounter` macro to calculate initiative results *before* combatant creation. By passing the `initiative` value directly in the call to `createEmbeddedDocuments`, we ensure combatants are never without an initiative score, thus preempting any automated "roll" triggers from the system or third-party modules.
+- **Silent Setup Encounter**: Renamed the macro to 'Silent Setup Encounter' to ensure the updated code (Atomic Silent Initiative) is used. Calculate initiative *before* combatant creation to preempt any automated "roll" triggers from the system or third-party modules.
 
 
 ## v0.0.33

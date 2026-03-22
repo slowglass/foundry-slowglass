@@ -1,4 +1,4 @@
-// Macro Name: Setup Auto-Encounter
+// Macro Name: Silent Setup Encounter
 // Description: Automatically adds non-player tokens as hidden combatants
 //     and sets all initiative silently via pre-calculation to avoid
 //     all dice animations and chat messages.
