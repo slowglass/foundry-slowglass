@@ -1,7 +1,7 @@
 // Macro Name: Setup Auto-Encounter
 // Description: Automatically adds non-player tokens as hidden combatants
-//     and rolls their initiative in private, then adds player tokens
-//     to the tracker.
+//     and rolls all initiative privately (only seen by the GM), then 
+//     adds player tokens to the tracker and rolls for them as well.
 // Icon: Module other/setup-encounter.png
 
 (async () => {
@@ -42,16 +42,16 @@
         const npcCombatantIds = createdCombatants.map(c => c.id);
 
         // 4. Roll NPC initiative in private
-        // Using "gmroll" makes the roll only visible to the GM
+        // Using "blindroll" makes the roll only visible to the GM
         await combat.rollInitiative(npcCombatantIds, {
-            messageOptions: { rollMode: "gmroll" }
+            messageOptions: { rollMode: "blindroll" }
         });
-        ui.notifications.info(`Added and rolled initiative for ${npcTokens.length} hidden NPCs.`);
+        ui.notifications.info(`Added and rolled private initiative for ${npcTokens.length} NPCs.`);
     } else {
         ui.notifications.info("No un-tracked NPCs found to add.");
     }
 
-    // 5. Add Players to the tracker (not hidden)
+    // 5. Add Players to the tracker
     if (playerTokens.length > 0) {
         const playerData = playerTokens.map(t => ({
             tokenId: t.id,
@@ -60,7 +60,14 @@
             hidden: false
         }));
 
-        await combat.createEmbeddedDocuments("Combatant", playerData);
-        ui.notifications.info(`Added ${playerTokens.length} Players to the tracker.`);
+        const createdPlayerCombatants = await combat.createEmbeddedDocuments("Combatant", playerData);
+        const playerCombatantIds = createdPlayerCombatants.map(c => c.id);
+
+        // 6. Roll Player initiative in private
+        await combat.rollInitiative(playerCombatantIds, {
+             messageOptions: { rollMode: "blindroll" }
+        });
+        ui.notifications.info(`Added and rolled private initiative for ${playerTokens.length} Players.`);
     }
 })();
+
