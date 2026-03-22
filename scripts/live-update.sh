@@ -49,11 +49,11 @@ for GAME in "${GAMES[@]}"; do
 
   if [ "$RESTART" = true ]; then
     echo "Stopping stack at ${STACK_PATH}..."
-    ssh ${FOUNDRY_HOST} "cd ${STACK_PATH} && docker compose down"
+    ssh ${FOUNDRY_HOST} "cd ${STACK_PATH} && docker compose stop"
   fi
 
   echo "Extracting files to ${MODULE_PATH}..."
-  ssh ${FOUNDRY_HOST} "mkdir -p ${MODULE_PATH} && tar -xzf /tmp/$TAR_NAME -C ${MODULE_PATH} && chown -R 3:2 ${DATA_PATH}"
+  ssh ${FOUNDRY_HOST} "mkdir -p ${MODULE_PATH} && tar -xzf /tmp/$TAR_NAME -C ${MODULE_PATH} && chown -R cjd ${MODULE_PATH}"
 
   if [ "$RESTART" = true ]; then
     echo "Starting stack at ${STACK_PATH}..."

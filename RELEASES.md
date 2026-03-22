@@ -2,6 +2,11 @@
 
 ## Pre release
 
+- **DevOps - Stack Management**: Integrated Dockge stack control into `live-update.sh` using `docker compose stop/start` to ensure seamless module replacement without software re-downloads or license invalidation.
+- **Remote Deployment Hardening**: Established robust path mapping and explicit ownership controls to support Dockge stacks and Strax host permissions.
+- **Auto-Start Optimization**: Verified environment compatibility for automated world loading post-deployment.
+
+
 ## v0.0.32
 
 - **Journal System Overhaul:** Added `src/journal-manager.js` to automatically establish and sync module documentation (Foundry-Slowglass and Game journals) directly into the host VTT worlds with proper GM/Player permissions and HTML generation.

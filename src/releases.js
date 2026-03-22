@@ -5,7 +5,7 @@ export const RELEASES_MD = `# Release Notes
 - **Journal System Overhaul:** Added \`src/journal-manager.js\` to automatically establish and sync module documentation (Foundry-Slowglass and Game journals) directly into the host VTT worlds with proper GM/Player permissions and HTML generation.
 - **Automated Deploy Notes:** Scripted \`generate-releases.js\` inside the build steps to convert the Markdown release history into JS-exported HTML elements for clean Foundry journal synchronization.
 - **Macro Modifications:** Updated user interaction macros (\`ability.js\`, \`skills.js\`) to support active-state context toggling and custom UI width rendering parameters.
-- **Module Maintenance & Deploy Skills:** Established workflow docs (\`SKILL.md\`) outlining processes for module live-updates and staging.
+- **Module Maintenance & Deploy Skills:** Established workflow docs (\`SKILL.md\`) and enhanced \`live-update.sh\` with Dockge stack management (automated stop/start) and UID-specific permission handling.
 
 ## v0.0.31
 
@@ -82,7 +82,7 @@ export const RELEASES_HTML = `<h1>Release Notes</h1>
 <li><strong>Journal System Overhaul:</strong> Added <code>src/journal-manager.js</code> to automatically establish and sync module documentation (Foundry-Slowglass and Game journals) directly into the host VTT worlds with proper GM/Player permissions and HTML generation.</li>
 <li><strong>Automated Deploy Notes:</strong> Scripted <code>generate-releases.js</code> inside the build steps to convert the Markdown release history into JS-exported HTML elements for clean Foundry journal synchronization.</li>
 <li><strong>Macro Modifications:</strong> Updated user interaction macros (<code>ability.js</code>, <code>skills.js</code>) to support active-state context toggling and custom UI width rendering parameters.</li>
-<li><strong>Module Maintenance & Deploy Skills:</strong> Established workflow docs (<code>SKILL.md</code>) outlining processes for module live-updates and staging.</li>
+<li><strong>Module Maintenance & Deploy Skills:</strong> Established workflow docs (<code>SKILL.md</code>) and enhanced <code>live-update.sh</code> with Dockge stack management (automated stop/start) and UID-specific permission handling.</li>
 </ul>
 <h2>v0.0.31</h2>
 <ul>
