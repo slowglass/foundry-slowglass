@@ -1,7 +1,7 @@
 # Release Notes
 
 ## Pre release
-- **Silent Initiative Rolls**: Updated the `Setup Auto-Encounter` macro to suppress all chat messages during initiative rolling using `create: false`. This ensures players are unaware of both NPC entries and their own automated rolls, keeping setup hidden from chat.
+- **Total Initiative Silence**: Refactored the `Setup Auto-Encounter` macro to manually evaluate and set initiative for all participants. By bypassing the core `rollInitiative` method, all chat messages and 3D dice animations (e.g., Dice So Nice) are successfully suppressed.
 
 
 ## v0.0.33

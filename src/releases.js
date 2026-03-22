@@ -1,8 +1,7 @@
 export const RELEASES_MD = `# Release Notes
 
 ## Pre release
-- **Private Encounter Initiative**: Updated the \`Setup Auto-Encounter\` macro to ensure all initiative rolls use \`blindroll\` for GM-only visibility.
-- **Automated Participant Rolling**: The macro now automatically rolls private initiative for both NPCs and player characters during encounter setup.
+- **Silent Initiative Rolls**: Updated the \`Setup Auto-Encounter\` macro to suppress all chat messages during initiative rolling using \`create: false\`. This ensures players are unaware of both NPC entries and their own automated rolls, keeping setup hidden from chat.
 
 
 ## v0.0.33
@@ -108,8 +107,7 @@ export const RELEASES_MD = `# Release Notes
 export const RELEASES_HTML = `<h1>Release Notes</h1>
 <h2>Pre release</h2>
 <ul>
-<li><strong>Private Encounter Initiative</strong>: Updated the <code>Setup Auto-Encounter</code> macro to ensure all initiative rolls use <code>blindroll</code> for GM-only visibility.</li>
-<li><strong>Automated Participant Rolling</strong>: The macro now automatically rolls private initiative for both NPCs and player characters during encounter setup.</li>
+<li><strong>Silent Initiative Rolls</strong>: Updated the <code>Setup Auto-Encounter</code> macro to suppress all chat messages during initiative rolling using <code>create: false</code>. This ensures players are unaware of both NPC entries and their own automated rolls, keeping setup hidden from chat.</li>
 </ul>
 <h2>v0.0.33</h2>
 <ul>

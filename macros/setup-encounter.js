@@ -1,7 +1,7 @@
 // Macro Name: Setup Auto-Encounter
 // Description: Automatically adds non-player tokens as hidden combatants
-//     and rolls all initiative silently (no chat messages), then 
-//     adds player tokens to the tracker and rolls for them as well.
+//     and sets all initiative silently (no chat messages or dice animations),
+//     then adds player tokens to the tracker and rolls for them as well.
 // Icon: Module other/setup-encounter.png
 
 (async () => {
@@ -39,14 +39,17 @@
         }));
 
         const createdCombatants = await combat.createEmbeddedDocuments("Combatant", npcData);
-        const npcCombatantIds = createdCombatants.map(c => c.id);
-
-        // 4. Roll NPC initiative silently
-        // Setting create: false in messageOptions suppresses the chat roll message
-        await combat.rollInitiative(npcCombatantIds, {
-            messageOptions: { create: false }
-        });
-        ui.notifications.info(`Added and silently rolled initiative for ${npcTokens.length} NPCs.`);
+        
+        // 4. Roll NPC initiative manually to avoid all UI (chat and 3D dice)
+        const npcUpdates = [];
+        for (const c of createdCombatants) {
+            const roll = await c.getInitiativeRoll();
+            await roll.evaluate();
+            npcUpdates.push({ _id: c.id, initiative: roll.total });
+        }
+        await combat.updateEmbeddedDocuments("Combatant", npcUpdates);
+        
+        ui.notifications.info(`Added and silently set initiative for ${npcTokens.length} NPCs.`);
     } else {
         ui.notifications.info("No un-tracked NPCs found to add.");
     }
@@ -61,14 +64,19 @@
         }));
 
         const createdPlayerCombatants = await combat.createEmbeddedDocuments("Combatant", playerData);
-        const playerCombatantIds = createdPlayerCombatants.map(c => c.id);
 
-        // 6. Roll Player initiative silently
-        await combat.rollInitiative(playerCombatantIds, {
-             messageOptions: { create: false }
-        });
-        ui.notifications.info(`Added and silently rolled initiative for ${playerTokens.length} Players.`);
+        // 6. Roll Player initiative manually to avoid all UI (chat and 3D dice)
+        const playerUpdates = [];
+        for (const c of createdPlayerCombatants) {
+            const roll = await c.getInitiativeRoll();
+            await roll.evaluate();
+            playerUpdates.push({ _id: c.id, initiative: roll.total });
+        }
+        await combat.updateEmbeddedDocuments("Combatant", playerUpdates);
+
+        ui.notifications.info(`Added and silently set initiative for ${playerTokens.length} Players.`);
     }
 })();
+
 
 
