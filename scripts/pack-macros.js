@@ -25,8 +25,20 @@ function convertMacro(fileName) {
 
     const filePath = path.join(MACRO_DIR, fileName);
     const content = fs.readFileSync(filePath, 'utf8');
-    const macroName = path.basename(fileName, '.js').replace(/[-_]/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
-    const macroId = generateId(macroName);
+    const defaultName = path.basename(fileName, '.js').replace(/[-_]/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+    let macroName = defaultName;
+    
+    // Parse metadata comments
+    const lines = content.split('\n');
+    for (let line of lines) {
+        line = line.trim();
+        const nameMatch = line.match(/^\/\/\s*Macro Name:\s*(.*?)\s*$/i);
+        if (nameMatch) {
+            macroName = nameMatch[1].trim();
+        }
+    }
+    
+    const macroId = generateId(defaultName);
 
     const macroData = {
         "name": macroName,
@@ -52,8 +64,7 @@ function convertMacro(fileName) {
         }
     };
 
-    // Parse metadata comments
-    const lines = content.split('\n');
+    // Parse metadata comments (again for other fields like icon)
     for (let line of lines) {
         line = line.trim();
         const iconMatch = line.match(/^\/\/\s*Icon:\s*(Module|Core)\s+(.*?)\s*$/i);

@@ -1,4 +1,4 @@
-// Macro Name: GM Logs (Forgotten Realms)
+// Macro Name: GMLog (Forgotten Realms)
 // Description: Adds formatted notes with Harptos game-time and real-world time to a 'Logs' Journal entry.
 // Icon: Module other/documents/scroll-sealed.png
 
