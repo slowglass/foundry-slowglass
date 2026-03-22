@@ -1,6 +1,6 @@
 // Macro Name: Light Picker
 // Description: Quick UI to toggle common light sources for selected tokens.
-// Icon: Core sundries/lights/torch-brown-lit.webp
+// Icon: Module other/light-picker.png
 
 (async () => {
     const torchAnimation = { "type": "torch", "speed": 1, "intensity": 1, "reverse": false };

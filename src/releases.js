@@ -1,5 +1,9 @@
 export const RELEASES_MD = `# Release Notes
 
+## Pre release
+- **GM Encounter Logs Workflow**: Added a new macro "GMLog (Forgotten Realms)" that generates Harptos game-time (DR) and real-world timestamps for saving custom text notes to a dedicated "Logs" journal automatically.
+- **Select My Token Icon**: Assigned a new Victorian-style (Tech-Tome) module icon to the "Select My Token" macro.
+- **Macro Name Parsing Update**: Upgraded the internal packing script to dynamically parse explicit \`// Macro Name:\` header directives for custom display names without disrupting internal macro IDs.
 ## v0.0.35
 - **Light Picker Modernization**: Refactored the \`Light\` macro into a high-performance grid-based UI with premium styling (2-column responsive layout).
 - **Enhanced Light Workflow**: Optimized the order of common light sources and added **Continual Flame** (Open/Closed) support for simplified magical lighting management.
@@ -110,6 +114,12 @@ export const RELEASES_MD = `# Release Notes
 - Initial commit
 `;
 export const RELEASES_HTML = `<h1>Release Notes</h1>
+<h2>Pre release</h2>
+<ul>
+<li><strong>GM Encounter Logs Workflow</strong>: Added a new macro "GMLog (Forgotten Realms)" that generates Harptos game-time (DR) and real-world timestamps for saving custom text notes to a dedicated "Logs" journal automatically.</li>
+<li><strong>Select My Token Icon</strong>: Assigned a new Victorian-style (Tech-Tome) module icon to the "Select My Token" macro.</li>
+<li><strong>Macro Name Parsing Update</strong>: Upgraded the internal packing script to dynamically parse explicit <code>// Macro Name:</code> header directives for custom display names without disrupting internal macro IDs.</li>
+</ul>
 <h2>v0.0.35</h2>
 <ul>
 <li><strong>Light Picker Modernization</strong>: Refactored the <code>Light</code> macro into a high-performance grid-based UI with premium styling (2-column responsive layout).</li>
