@@ -1,12 +1,10 @@
 export const RELEASES_MD = `# Release Notes
 
 ## Pre release
-
-- **Compendium Sync Refactor**: Replaced fvtt-cli packing with a direct NeDB (.db) generation to fix the 0-byte database bug.
-- **Deployment Hardening**: Updated \`live-update.sh\` to use \`docker stop\` (preserving license/installation) and implemented targeted directory clearing for safe image skipping.
-- **Macro Visual Refresh**: Synchronized icon paths across all 13 macros with the new categorized folder structure.
-- **New Icon Assets**: Designed and deployed custom "Tech-Tome" icons for "Create Select" and "Setup Encounter" macros.
-- **New Design Skill**: Created the \`stand-alone-icon\` skill for automating the generation of premium, parchment-style illustrations.
+- **Macro Icon Completion**: Designed and deployed unique "Tech-Tome" icons for "Summon Creatures" (Scientific Plate) and "Import Transcripts" (Victorian Microphone).
+- **Universal Header Refactor**: Standardized all 13 macro headers to the single-line comment format and synchronized icon paths with the modernized \`other/\`, \`paper/\`, and \`transparent/\` folder structure.
+- **Design Logic Hardening**: Created the \`stand_alone_icon\` skill to codify the 18th-century "field journal" aesthetic for all future standalone assets.
+- **Source Sync Fix**: Corrected a discrepancy in local macro sources to ensure the production compendium perfectly matches the intended codebase.
 
 
 ## v0.0.32
@@ -88,11 +86,10 @@ export const RELEASES_MD = `# Release Notes
 export const RELEASES_HTML = `<h1>Release Notes</h1>
 <h2>Pre release</h2>
 <ul>
-<li><strong>Compendium Sync Refactor</strong>: Replaced fvtt-cli packing with a direct NeDB (.db) generation to fix the 0-byte database bug.</li>
-<li><strong>Deployment Hardening</strong>: Updated <code>live-update.sh</code> to use <code>docker stop</code> (preserving license/installation) and implemented targeted directory clearing for safe image skipping.</li>
-<li><strong>Macro Visual Refresh</strong>: Synchronized icon paths across all 13 macros with the new categorized folder structure.</li>
-<li><strong>New Icon Assets</strong>: Designed and deployed custom "Tech-Tome" icons for "Create Select" and "Setup Encounter" macros.</li>
-<li><strong>New Design Skill</strong>: Created the <code>stand-alone-icon</code> skill for automating the generation of premium, parchment-style illustrations.</li>
+<li><strong>Macro Icon Completion</strong>: Designed and deployed unique "Tech-Tome" icons for "Summon Creatures" (Scientific Plate) and "Import Transcripts" (Victorian Microphone).</li>
+<li><strong>Universal Header Refactor</strong>: Standardized all 13 macro headers to the single-line comment format and synchronized icon paths with the modernized <code>other/</code>, <code>paper/</code>, and <code>transparent/</code> folder structure.</li>
+<li><strong>Design Logic Hardening</strong>: Created the <code>stand_alone_icon</code> skill to codify the 18th-century "field journal" aesthetic for all future standalone assets.</li>
+<li><strong>Source Sync Fix</strong>: Corrected a discrepancy in local macro sources to ensure the production compendium perfectly matches the intended codebase.</li>
 </ul>
 <h2>v0.0.32</h2>
 <ul>

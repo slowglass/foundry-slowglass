@@ -54,8 +54,9 @@ function convertMacro(fileName) {
 
     // Parse metadata comments
     const lines = content.split('\n');
-    for (const line of lines) {
-        const iconMatch = line.match(/^\/\/\s*Icon:\s*(Module|Core)\s+(.*)$/i);
+    for (let line of lines) {
+        line = line.trim();
+        const iconMatch = line.match(/^\/\/\s*Icon:\s*(Module|Core)\s+(.*?)\s*$/i);
         if (iconMatch) {
             const sourceType = iconMatch[1].toLowerCase();
             const iconPath = iconMatch[2].trim();
