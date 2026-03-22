@@ -1,6 +1,6 @@
 # Release Notes
 
-## Pre release
+## v0.0.34
 - **Silent Setup Encounter**: Renamed the macro to 'Silent Setup Encounter' to ensure the updated code (Atomic Silent Initiative) is used. Calculate initiative *before* combatant creation to preempt any automated "roll" triggers from the system or third-party modules.
 
 
