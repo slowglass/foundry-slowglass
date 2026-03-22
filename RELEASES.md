@@ -1,6 +1,6 @@
 # Release Notes
 
-## Pre release
+## v0.0.33
 - **Macro Icon Completion**: Designed and deployed unique "Tech-Tome" icons for "Summon Creatures" (Scientific Plate) and "Import Transcripts" (Victorian Microphone).
 - **Universal Header Refactor**: Standardized all 13 macro headers to the single-line comment format and synchronized icon paths with the modernized `other/`, `paper/`, and `transparent/` folder structure.
 - **Design Logic Hardening**: Created the `stand_alone_icon` skill to codify the 18th-century "field journal" aesthetic for all future standalone assets.
@@ -76,9 +76,26 @@
 - Refactor: Introduce ActorManager class and rename file (#2)
 - Big death (#1)
 
+
+## v0.0.32
+
+- **Journal System Overhaul:** Added `src/journal-manager.js` to automatically establish and sync module documentation (Foundry-Slowglass and Game journals) directly into the host VTT worlds with proper GM/Player permissions and HTML generation.
+- **Automated Deploy Notes:** Scripted `generate-releases.js` inside the build steps to convert the Markdown release history into JS-exported HTML elements for clean Foundry journal synchronization.
+- **Macro Modifications:** Updated user interaction macros (`ability.js`, `skills.js`) to support active-state context toggling and custom UI width rendering parameters.
+- **Module Maintenance & Deploy Skills:** Established workflow docs (`SKILL.md`) and enhanced `live-update.sh` with Dockge stack management (automated stop/start) and UID-specific permission handling.
+
+## v0.0.31
+
+- More work on the release process
+
+## v0.0.30
+
+- Add and update skills for releasing and updating the module.
+
+## v0.0.3
+
 ## v0.0.1
 
 - Release Version: v0.0.1
 - Initial commit
 - Initial commit
-
