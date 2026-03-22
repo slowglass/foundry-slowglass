@@ -1,5 +1,7 @@
 # Release Notes
 
+## Pre release
+
 ## v0.0.32
 
 - **Journal System Overhaul:** Added `src/journal-manager.js` to automatically establish and sync module documentation (Foundry-Slowglass and Game journals) directly into the host VTT worlds with proper GM/Player permissions and HTML generation.
