@@ -1,55 +1,11 @@
-export const HAS_PRE_RELEASE = true;
-export const PRE_RELEASE_MD = `# Pre-Release
-
-- Increase version and improve release journal update reliability
-- Improve journal page update logic and add debug logs
-- Update release notes
-- Add Pre release section and update skill instructions
-- Migrate Release notes to markdown
-- Extract release notes into a Releases journal page
-- Use object replace for journal ownership update
-- Clean up journal manager comments
-- Revert journal update syntax
-- Improve journal update payload
-- Improve journal default text formatting
-- Fix journal ownership check
-- Add auto-opening journals for Foundry-Slowglass and Game
-- Small tweaks
-- Start 0.0.32-snapshot development cycle
-`;
-export const PRE_RELEASE_HTML = `<h1>Pre-Release</h1>
-<ul>
-<li>Increase version and improve release journal update reliability</li>
-<li>Improve journal page update logic and add debug logs</li>
-<li>Update release notes</li>
-<li>Add Pre release section and update skill instructions</li>
-<li>Migrate Release notes to markdown</li>
-<li>Extract release notes into a Releases journal page</li>
-<li>Use object replace for journal ownership update</li>
-<li>Clean up journal manager comments</li>
-<li>Revert journal update syntax</li>
-<li>Improve journal update payload</li>
-<li>Improve journal default text formatting</li>
-<li>Fix journal ownership check</li>
-<li>Add auto-opening journals for Foundry-Slowglass and Game</li>
-<li>Small tweaks</li>
-<li>Start 0.0.32-snapshot development cycle</li>
-</ul>
-`;
 export const RELEASES_MD = `# Release Notes
 
 ## Pre release
 
-- Migrate Release notes to markdown
-- Extract release notes into a Releases journal page
-- Use object replace for journal ownership update
-- Clean up journal manager comments
-- Revert journal update syntax
-- Improve journal update payload
-- Improve journal default text formatting
-- Fix journal ownership check
-- Add auto-opening journals for Foundry-Slowglass and Game
-- Small tweaks
+- **Journal System Overhaul:** Added \`src/journal-manager.js\` to automatically establish and sync module documentation (Foundry-Slowglass and Game journals) directly into the host VTT worlds with proper GM/Player permissions and HTML generation.
+- **Automated Deploy Notes:** Scripted \`generate-releases.js\` inside the build steps to convert the Markdown release history into JS-exported HTML elements for clean Foundry journal synchronization.
+- **Macro Modifications:** Updated user interaction macros (\`ability.js\`, \`skills.js\`) to support active-state context toggling and custom UI width rendering parameters.
+- **Module Maintenance & Deploy Skills:** Established workflow docs (\`SKILL.md\`) outlining processes for module live-updates and staging.
 
 ## v0.0.31
 
@@ -123,16 +79,10 @@ export const RELEASES_MD = `# Release Notes
 export const RELEASES_HTML = `<h1>Release Notes</h1>
 <h2>Pre release</h2>
 <ul>
-<li>Migrate Release notes to markdown</li>
-<li>Extract release notes into a Releases journal page</li>
-<li>Use object replace for journal ownership update</li>
-<li>Clean up journal manager comments</li>
-<li>Revert journal update syntax</li>
-<li>Improve journal update payload</li>
-<li>Improve journal default text formatting</li>
-<li>Fix journal ownership check</li>
-<li>Add auto-opening journals for Foundry-Slowglass and Game</li>
-<li>Small tweaks</li>
+<li><strong>Journal System Overhaul:</strong> Added <code>src/journal-manager.js</code> to automatically establish and sync module documentation (Foundry-Slowglass and Game journals) directly into the host VTT worlds with proper GM/Player permissions and HTML generation.</li>
+<li><strong>Automated Deploy Notes:</strong> Scripted <code>generate-releases.js</code> inside the build steps to convert the Markdown release history into JS-exported HTML elements for clean Foundry journal synchronization.</li>
+<li><strong>Macro Modifications:</strong> Updated user interaction macros (<code>ability.js</code>, <code>skills.js</code>) to support active-state context toggling and custom UI width rendering parameters.</li>
+<li><strong>Module Maintenance & Deploy Skills:</strong> Established workflow docs (<code>SKILL.md</code>) outlining processes for module live-updates and staging.</li>
 </ul>
 <h2>v0.0.31</h2>
 <ul>

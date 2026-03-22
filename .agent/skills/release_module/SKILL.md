@@ -11,7 +11,7 @@ This skill outlines the process for releasing a new version of the Foundry Slowg
 
 When a new release is required, follow these steps in order:
 
-1. **Update RELEASES.md**: Move the contents of the `## Pre release` section to a new version section (e.g., `## v0.0.32`) and clear the `Pre release` section.
+1. **Update RELEASES.md**: Move the contents of the `## Pre release` section to a new version section (e.g., `## v0.0.32`) and remove the `Pre release` section.
 2. **Update Manifest Version**: Remove the `-snapshot` suffix from the `version` number in `module.json`. (e.g., `"version": "0.0.32-snapshot"` becomes `"version": "0.0.32"`).
 3. **Commit Version Update**: Commit the changes to `module.json` and `RELEASES.md`.
 4. **Tag the Release**: Add a git tag corresponding to the new version number, prefixed with `v` (e.g., `v0.0.32`).

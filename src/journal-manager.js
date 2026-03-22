@@ -30,7 +30,7 @@ export class JournalManager {
     // Both GMs and Players try to open, but only GMs can create/update
     if (!game.user.isGM) {
       console.log("Foundry-Slowglass | Player detected, opening journals if they exist.");
-      this._openJournal("Foundry-Slowglass");
+      this._openJournal("Foundry-Slowglass", "Releases");
       return;
     }
 
@@ -38,7 +38,7 @@ export class JournalManager {
     await this._setupFoundrySlowglassJournal();
     await this._setupGameJournal();
 
-    this._openJournal("Foundry-Slowglass");
+    this._openJournal("Foundry-Slowglass", "Releases");
   }
 
   /**

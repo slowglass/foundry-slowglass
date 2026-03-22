@@ -61,7 +61,9 @@ if (fs.existsSync(releasesMdPath)) {
     let htmlContent = mdContent
         .replace(/^# (.*?)$/gm, '<h1>$1</h1>')
         .replace(/^## (.*?)$/gm, '<h2>$1</h2>')
-        .replace(/^### (.*?)$/gm, '<h3>$1</h3>');
+        .replace(/^### (.*?)$/gm, '<h3>$1</h3>')
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        .replace(/`(.*?)`/g, '<code>$1</code>');
         
     // Handle bullet points
     let inList = false;
@@ -92,6 +94,9 @@ if (fs.existsSync(releasesMdPath)) {
             }
         }
     }
+    if (inList) newHtml.push('</ul>');
+    htmlContent = newHtml.join('\n');
+
     // Escape backticks and backslashes
     const safeContent = mdContent.replace(/\\/g, '\\\\').replace(/`/g, '\\`');
     const safeHtmlContent = htmlContent.replace(/\\/g, '\\\\').replace(/`/g, '\\`');
