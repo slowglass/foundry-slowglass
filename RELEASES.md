@@ -2,16 +2,10 @@
 
 ## Pre release
 
-- Migrate Release notes to markdown
-- Extract release notes into a Releases journal page
-- Use object replace for journal ownership update
-- Clean up journal manager comments
-- Revert journal update syntax
-- Improve journal update payload
-- Improve journal default text formatting
-- Fix journal ownership check
-- Add auto-opening journals for Foundry-Slowglass and Game
-- Small tweaks
+- **Journal System Overhaul:** Added `src/journal-manager.js` to automatically establish and sync module documentation (Foundry-Slowglass and Game journals) directly into the host VTT worlds with proper GM/Player permissions and HTML generation.
+- **Automated Deploy Notes:** Scripted `generate-releases.js` inside the build steps to convert the Markdown release history into JS-exported HTML elements for clean Foundry journal synchronization.
+- **Macro Modifications:** Updated user interaction macros (`ability.js`, `skills.js`) to support active-state context toggling and custom UI width rendering parameters.
+- **Module Maintenance & Deploy Skills:** Established workflow docs (`SKILL.md`) outlining processes for module live-updates and staging.
 
 ## v0.0.31
 

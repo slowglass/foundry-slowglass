@@ -56,12 +56,50 @@ if (!fs.existsSync(releasesMdPath)) {
 if (fs.existsSync(releasesMdPath)) {
     const mdContent = fs.readFileSync(releasesMdPath, 'utf8');
     const outputPath = path.join(__dirname, '..', 'src', 'releases.js');
+    
+    // Parse to simple HTML
+    let htmlContent = mdContent
+        .replace(/^# (.*?)$/gm, '<h1>$1</h1>')
+        .replace(/^## (.*?)$/gm, '<h2>$1</h2>')
+        .replace(/^### (.*?)$/gm, '<h3>$1</h3>');
+        
+    // Handle bullet points
+    let inList = false;
+    let newHtml = [];
+    const lines = htmlContent.split('\n');
+    for (let line of lines) {
+        if (line.startsWith('- ')) {
+            if (!inList) {
+                newHtml.push('<ul>');
+                inList = true;
+            }
+            newHtml.push(`<li>${line.substring(2)}</li>`);
+        } else {
+            if (inList) {
+                newHtml.push('</ul>');
+                inList = false;
+            }
+            // Add <br> for empty lines if not in a list and not after a heading
+            if (line.trim() === '' && !newHtml[newHtml.length - 1]?.endsWith('</h1>') && !newHtml[newHtml.length - 1]?.endsWith('</h2>')) {
+                 // Do nothing or add br
+            } else if (line.trim() !== '') {
+                 // if not heading, wrap in p? Actually just raw is fine or add <p> for lines without tags
+                 if (!line.startsWith('<')) {
+                     newHtml.push(`<p>${line}</p>`);
+                 } else {
+                     newHtml.push(line);
+                 }
+            }
+        }
+    }
     // Escape backticks and backslashes
     const safeContent = mdContent.replace(/\\/g, '\\\\').replace(/`/g, '\\`');
+    const safeHtmlContent = htmlContent.replace(/\\/g, '\\\\').replace(/`/g, '\\`');
 
-    const fileContent = `export const RELEASES_MD = \`${safeContent}\`;\n`;
+    const fileContent = `export const RELEASES_MD = \`${safeContent}\`;\nexport const RELEASES_HTML = \`${safeHtmlContent}\`;\n`;
     fs.writeFileSync(outputPath, fileContent);
     console.log('✅ Generated src/releases.js from RELEASES.md');
 } else {
     console.error("RELEASES.md still does not exist.");
 }
+

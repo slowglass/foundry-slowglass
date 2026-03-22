@@ -5,17 +5,31 @@ source .env
 # Run the build script
 ./scripts/build.sh
 
+SKIP_IMAGES=false
+GAMES=()
+
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        --skip-images) SKIP_IMAGES=true ;;
+        -*) echo "Unknown parameter passed: $1"; exit 1 ;;
+        *) GAMES+=("$1") ;;
+    esac
+    shift
+done
+
 # Determine which games to update
-if [ -n "$1" ]; then
-  GAMES=("$1")
-else
+if [ ${#GAMES[@]} -eq 0 ]; then
   GAMES=("nbdsm" "sotr")
 fi
 
 TAR_NAME="update.tar.gz"
 
 echo "Creating tar file..."
-tar -czf $TAR_NAME src styles lang templates icons module.json
+if [ "$SKIP_IMAGES" = true ]; then
+  tar -czf $TAR_NAME src styles lang templates module.json
+else
+  tar -czf $TAR_NAME src styles lang templates icons module.json
+fi
 
 echo "Copying to ${FOUNDRY_HOST}..."
 scp $TAR_NAME ${FOUNDRY_HOST}:/tmp/$TAR_NAME
