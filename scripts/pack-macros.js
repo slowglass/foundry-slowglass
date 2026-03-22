@@ -20,10 +20,34 @@ function generateId(name) {
 /**
  * Converts a JS macro file to a Foundry VTT Macro JSON.
  */
-function convertMacro(fileName) {
+const oldFolderId = generateId("FolderOldMacros");
+
+const folderDoc = {
+    "_id": oldFolderId,
+    "name": "Old",
+    "type": "script", // Actually, for compat, Foundry might expect packs to have a Folder document with specific format. 
+    // In db files, a folder is identified by being a folder model. We will assign type: "Folder".
+    "folder": null,
+    "sort": 0,
+    "color": "#444444",
+    "flags": {},
+    "_stats": {
+        "systemId": "dnd5e",
+        "systemVersion": "4.0.0",
+        "coreVersion": "13.350",
+        "createdTime": Date.now(),
+        "modifiedTime": Date.now(),
+        "lastModifiedBy": "slowglass"
+    }
+};
+// We will change the type of Folder doc just in case it is strictly 'Folder'. In Foundry v10/v11+, folders in packs are documents.
+folderDoc.type = "Folder"; 
+
+function convertMacro(fileName, isOld) {
     if (!fileName.endsWith('.js')) return null;
 
-    const filePath = path.join(MACRO_DIR, fileName);
+    const baseDir = isOld ? path.join(MACRO_DIR, 'old') : MACRO_DIR;
+    const filePath = path.join(baseDir, fileName);
     const content = fs.readFileSync(filePath, 'utf8');
     const defaultName = path.basename(fileName, '.js').replace(/[-_]/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
     let macroName = defaultName;
@@ -38,6 +62,7 @@ function convertMacro(fileName) {
         }
     }
     
+    // To ensure old macros maintain their IDs if they had them before, we use the same defaultName.
     const macroId = generateId(defaultName);
 
     const macroData = {
@@ -47,7 +72,7 @@ function convertMacro(fileName) {
         "img": "icons/svg/dice-target.svg", // Default
         "scope": "global",
         "command": content,
-        "folder": null,
+        "folder": isOld ? oldFolderId : null,
         "sort": 0,
         "ownership": {
             "default": 0
@@ -81,8 +106,23 @@ function convertMacro(fileName) {
 
 // Collect all macro objects
 const macros = fs.readdirSync(MACRO_DIR)
-    .map(convertMacro)
+    .filter(f => fs.statSync(path.join(MACRO_DIR, f)).isFile())
+    .map(f => convertMacro(f, false))
     .filter(Boolean);
+
+// Read old macros
+const oldDir = path.join(MACRO_DIR, 'old');
+if (fs.existsSync(oldDir)) {
+    const oldMacros = fs.readdirSync(oldDir)
+        .filter(f => fs.statSync(path.join(oldDir, f)).isFile())
+        .map(f => convertMacro(f, true))
+        .filter(Boolean);
+    
+    if (oldMacros.length > 0) {
+        // If there are old macros, we include the folder document and the scripts
+        macros.push(folderDoc, ...oldMacros);
+    }
+}
 
 // Update .db file: NeDB (JSONL) is one JSON object per line
 const jsonlContent = macros.map(m => JSON.stringify(m)).join('\n');

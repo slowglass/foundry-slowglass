@@ -4,6 +4,8 @@
 - **GM Encounter Logs Workflow**: Added a new macro "GMLog (Forgotten Realms)" that generates Harptos game-time (DR) and real-world timestamps for saving custom text notes to a dedicated "Logs" journal automatically.
 - **Select My Token Icon**: Assigned a new Victorian-style (Tech-Tome) module icon to the "Select My Token" macro.
 - **Macro Name Parsing Update**: Upgraded the internal packing script to dynamically parse explicit `// Macro Name:` header directives for custom display names without disrupting internal macro IDs.
+- **Light Picker Icon Update**: Generated and applied a custom 18th-century "Tech-Tome" icon for the `Light Picker` macro to match the module's aesthetic.
+- **Macro Compendium Organization**: Reorganized depreciated legacy macros (`skills-old.js`, `ability-old.js`) into an isolated `old/` directory and refactored the pack construction script to automatically bundle them into a dedicated "Old" compendium folder during deployment.
 ## v0.0.35
 - **Light Picker Modernization**: Refactored the `Light` macro into a high-performance grid-based UI with premium styling (2-column responsive layout).
 - **Enhanced Light Workflow**: Optimized the order of common light sources and added **Continual Flame** (Open/Closed) support for simplified magical lighting management.
