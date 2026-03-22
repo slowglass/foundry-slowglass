@@ -1,7 +1,7 @@
 # Release Notes
 
 ## Pre release
-- **True Silent Initiative**: The `Setup Auto-Encounter` macro now uses `Math.random()` to calculate initiative instead of the Foundry `Roll` class. This completely bypasses all internal hooks and events related to dice rolling, successfully preventing 3D dice modules (like Dice So Nice) from animating for any user.
+- **Atomic Silent Initiative**: Refactored the `Setup Auto-Encounter` macro to calculate initiative results *before* combatant creation. By passing the `initiative` value directly in the call to `createEmbeddedDocuments`, we ensure combatants are never without an initiative score, thus preempting any automated "roll" triggers from the system or third-party modules.
 
 
 ## v0.0.33

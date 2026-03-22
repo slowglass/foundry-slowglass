@@ -1,7 +1,7 @@
 // Macro Name: Setup Auto-Encounter
 // Description: Automatically adds non-player tokens as hidden combatants
-//     and sets all initiative silently (true silent: no dice animations),
-//     then adds player tokens to the tracker and adds them as well.
+//     and sets all initiative silently via pre-calculation to avoid
+//     all dice animations and chat messages.
 // Icon: Module other/setup-encounter.png
 
 (async () => {
@@ -12,16 +12,12 @@
         ui.notifications.info("Created new Combat Encounter.");
     }
 
-    // 2. Identify tokens
-    const tokens = canvas.tokens.placeables.filter(t => t.actor);
+    // 2. Identify tokens not already in combat
+    const tokens = canvas.tokens.placeables.filter(t => t.actor && !t.inCombat);
     const playerTokens = [];
     const npcTokens = [];
 
-    // Separate tokens based on player ownership
     for (const t of tokens) {
-        // Skip tokens already in this combat encounter
-        if (t.inCombat) continue;
-
         if (t.actor.hasPlayerOwner) {
             playerTokens.push(t);
         } else {
@@ -29,55 +25,41 @@
         }
     }
 
-    // 3. Add NPCs as hidden
-    if (npcTokens.length > 0) {
-        const npcData = npcTokens.map(t => ({
-            tokenId: t.id,
+    /**
+     * Helper to pre-calculate initiative without triggering any Roll hooks
+     * This avoids Dice So Nice and any system auto-rollers.
+     */
+    const getSilentInitData = (token, isHidden) => {
+        const d20 = Math.floor(Math.random() * 20) + 1;
+        const bonus = token.actor?.system?.attributes?.init?.total ?? 0;
+        return {
+            tokenId: token.id,
             sceneId: canvas.scene.id,
-            actorId: t.actor.id,
-            hidden: true
-        }));
+            actorId: token.actor.id,
+            hidden: isHidden,
+            initiative: d20 + bonus
+        };
+    };
 
-        const createdCombatants = await combat.createEmbeddedDocuments("Combatant", npcData);
-        
-        // 4. Roll NPC initiative with Math.random to avoid ALL dice animations
-        // By bypassing the Roll class entirely, we ensure no 3D dice modules are triggered.
-        const npcUpdates = [];
-        for (const c of createdCombatants) {
-            const d20 = Math.floor(Math.random() * 20) + 1;
-            const bonus = c.actor?.system?.attributes?.init?.total ?? 0;
-            npcUpdates.push({ _id: c.id, initiative: d20 + bonus });
-        }
-        await combat.updateEmbeddedDocuments("Combatant", npcUpdates);
-        
-        ui.notifications.info(`Added and silently set initiative for ${npcTokens.length} NPCs.`);
-    } else {
-        ui.notifications.info("No un-tracked NPCs found to add.");
+    // 3. Add NPCs (Hidden and with pre-set initiative)
+    if (npcTokens.length > 0) {
+        const npcData = npcTokens.map(t => getSilentInitData(t, true));
+        await combat.createEmbeddedDocuments("Combatant", npcData);
+        ui.notifications.info(`Added ${npcTokens.length} hidden NPCs with silent initiative.`);
     }
 
-    // 5. Add Players to the tracker
+    // 4. Add Players (Public and with pre-set initiative)
     if (playerTokens.length > 0) {
-        const playerData = playerTokens.map(t => ({
-            tokenId: t.id,
-            sceneId: canvas.scene.id,
-            actorId: t.actor.id,
-            hidden: false
-        }));
+        const playerData = playerTokens.map(t => getSilentInitData(t, false));
+        await combat.createEmbeddedDocuments("Combatant", playerData);
+        ui.notifications.info(`Added ${playerTokens.length} Players with silent initiative.`);
+    }
 
-        const createdPlayerCombatants = await combat.createEmbeddedDocuments("Combatant", playerData);
-
-        // 6. Roll Player initiative with Math.random to avoid ALL dice animations
-        const playerUpdates = [];
-        for (const c of createdPlayerCombatants) {
-            const d20 = Math.floor(Math.random() * 20) + 1;
-            const bonus = c.actor?.system?.attributes?.init?.total ?? 0;
-            playerUpdates.push({ _id: c.id, initiative: d20 + bonus });
-        }
-        await combat.updateEmbeddedDocuments("Combatant", playerUpdates);
-
-        ui.notifications.info(`Added and silently set initiative for ${playerTokens.length} Players.`);
+    if (npcTokens.length === 0 && playerTokens.length === 0) {
+        ui.notifications.info("No un-tracked tokens found to add.");
     }
 })();
+
 
 
 
