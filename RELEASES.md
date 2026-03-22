@@ -1,5 +1,10 @@
 # Release Notes
 
+## v0.0.35
+- **Light Picker Modernization**: Refactored the `Light` macro into a high-performance grid-based UI with premium styling (2-column responsive layout).
+- **Enhanced Light Workflow**: Optimized the order of common light sources and added **Continual Flame** (Open/Closed) support for simplified magical lighting management.
+
+
 ## v0.0.34
 - **Silent Setup Encounter**: Renamed the macro to 'Silent Setup Encounter' to ensure the updated code (Atomic Silent Initiative) is used. Calculate initiative *before* combatant creation to preempt any automated "roll" triggers from the system or third-party modules.
 
