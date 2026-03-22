@@ -1,6 +1,6 @@
 // Macro Name: Request Skill Checks
 // Description: Request a skill check for specific actors. Presents a fully icon-based dialog to request Skill Checks.
-// Icon: Module tools/artisan-tools.png
+// Icon: Module other/tools/artisan-tools.png
 
 (async () => {
     const MODULE_NAME = "foundry-slowglass";

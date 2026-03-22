@@ -1,6 +1,6 @@
 // Macro Name: Select My Token
 // Description: Pops up a dialog with a grid of token icons for each token the player owns in the current scene. Clicking an icon selects that token.
-// Icon: Core icons/svg/dice-target.svg
+// Icon: Module paper/tools/create-select-symbol.png
 
 
 const myTokens = canvas.tokens.placeables.filter(t => t.document.isOwner);

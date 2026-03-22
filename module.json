@@ -53,7 +53,7 @@
         {
             "name": "slowglass-macros",
             "label": "Slowglass Macros",
-            "path": "packs/slowglass-macros",
+            "path": "packs/slowglass-macros.db",
             "type": "Macro"
         }
     ]

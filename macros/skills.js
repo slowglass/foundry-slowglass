@@ -1,7 +1,6 @@
-/**
- * Macro: Request Skill Checks (Isolated CSS)
- * Renamed classes to .skill-request-dialog to prevent style bleeding.
- */
+// Macro: Request Skill Checks (Isolated CSS)
+// Renamed classes to .skill-request-dialog to prevent style bleeding.
+// Icon: Module other/documents/reference-books.png
 
 (async () => {
     const MODULE_NAME = "foundry-slowglass";

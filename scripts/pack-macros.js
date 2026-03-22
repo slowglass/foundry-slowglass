@@ -3,18 +3,15 @@ const path = require('path');
 const crypto = require('crypto');
 
 const MACRO_DIR = path.join(__dirname, '..', 'macros');
-const PACK_SRC_DIR = path.join(__dirname, '..', '.build', 'packs', 'macros');
+const OUTPUT_FILE = path.join(__dirname, '..', 'packs', 'slowglass-macros.db');
 
-// Clean and ensure output directory exists
-if (fs.existsSync(PACK_SRC_DIR)) {
-    fs.rmSync(PACK_SRC_DIR, { recursive: true, force: true });
+// Ensure output directory exists
+if (!fs.existsSync(path.dirname(OUTPUT_FILE))) {
+    fs.mkdirSync(path.dirname(OUTPUT_FILE), { recursive: true });
 }
-fs.mkdirSync(PACK_SRC_DIR, { recursive: true });
 
 /**
  * Generates a consistent 16-character ID for a given string.
- * @param {string} name 
- * @returns {string}
  */
 function generateId(name) {
     return crypto.createHash('md5').update(name).digest('hex').substring(0, 16);
@@ -22,22 +19,13 @@ function generateId(name) {
 
 /**
  * Converts a JS macro file to a Foundry VTT Macro JSON.
- * @param {string} fileName 
  */
 function convertMacro(fileName) {
-    if (!fileName.endsWith('.js')) return;
+    if (!fileName.endsWith('.js')) return null;
 
     const filePath = path.join(MACRO_DIR, fileName);
     const content = fs.readFileSync(filePath, 'utf8');
     const macroName = path.basename(fileName, '.js').replace(/[-_]/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
-
-    // Attempt to extract description from JSDoc-style comments
-    let description = "";
-    const descMatch = content.match(/\* Description: (.*)/);
-    if (descMatch) {
-        description = descMatch[1];
-    }
-
     const macroId = generateId(macroName);
 
     const macroData = {
@@ -67,29 +55,25 @@ function convertMacro(fileName) {
     // Parse metadata comments
     const lines = content.split('\n');
     for (const line of lines) {
-        // Match: // Icon: Module [path] OR // Icon: Core [path]
         const iconMatch = line.match(/^\/\/\s*Icon:\s*(Module|Core)\s+(.*)$/i);
         if (iconMatch) {
             const sourceType = iconMatch[1].toLowerCase();
             const iconPath = iconMatch[2].trim();
-
-            if (sourceType === 'module') {
-                macroData.img = `modules/foundry-slowglass/icons/${iconPath}`;
-            } else if (sourceType === 'core') {
-                macroData.img = `icons/${iconPath}`;
-            }
+            macroData.img = sourceType === 'module' ? `modules/foundry-slowglass/icons/${iconPath}` : `icons/${iconPath}`;
             break;
         }
     }
 
-    const outputFileName = `macro_${macroName.replace(/\s+/g, '_')}_${macroId}.json`;
-    const outputPath = path.join(PACK_SRC_DIR, outputFileName);
-
-    fs.writeFileSync(outputPath, JSON.stringify(macroData, null, 2));
-    console.log(`Converted: ${fileName} -> ${outputFileName} (Icon: ${macroData.img})`);
+    return macroData;
 }
 
-// Process all files in the macro directory
-fs.readdirSync(MACRO_DIR).forEach(convertMacro);
+// Collect all macro objects
+const macros = fs.readdirSync(MACRO_DIR)
+    .map(convertMacro)
+    .filter(Boolean);
 
-console.log('Macro conversion complete.');
+// Update .db file: NeDB (JSONL) is one JSON object per line
+const jsonlContent = macros.map(m => JSON.stringify(m)).join('\n');
+fs.writeFileSync(OUTPUT_FILE, jsonlContent);
+
+console.log(`Macro conversion complete. Generated ${macros.length} macros in ${OUTPUT_FILE}`);

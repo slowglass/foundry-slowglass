@@ -1,6 +1,6 @@
 // Macro Name: Request Ability Checks & Saves (Scroll)
 // Description: Presents a fully icon-based dialog to request Saving Throws or Ability Checks.
-// Icon: Module documents/scroll-sealed.png
+// Icon: Module other/documents/scroll-sealed.png
 
 (async () => {
     const MODULE_NAME = "foundry-slowglass";

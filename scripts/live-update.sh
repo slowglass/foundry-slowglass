@@ -28,9 +28,9 @@ TAR_NAME="update.tar.gz"
 
 echo "Creating tar file..."
 if [ "$SKIP_IMAGES" = true ]; then
-  tar -czf $TAR_NAME src styles lang templates module.json
+  tar -czf $TAR_NAME src styles lang templates packs module.json
 else
-  tar -czf $TAR_NAME src styles lang templates icons module.json
+  tar -czf $TAR_NAME src styles lang templates icons packs module.json
 fi
 
 echo "Copying to ${FOUNDRY_HOST}..."
@@ -52,8 +52,15 @@ for GAME in "${GAMES[@]}"; do
     ssh ${FOUNDRY_HOST} "cd ${STACK_PATH} && docker compose stop"
   fi
 
+  # Determine which directories to clear on the server
+  # We always clear packs to ensure no LevelDB fragments remain
+  CLEAN_LIST="src styles lang templates packs module.json"
+  if [ "$SKIP_IMAGES" = false ]; then
+    CLEAN_LIST="$CLEAN_LIST icons"
+  fi
+
   echo "Extracting files to ${MODULE_PATH}..."
-  ssh ${FOUNDRY_HOST} "mkdir -p ${MODULE_PATH} && tar -xzf /tmp/$TAR_NAME -C ${MODULE_PATH} && chown -R cjd ${MODULE_PATH}"
+  ssh ${FOUNDRY_HOST} "mkdir -p ${MODULE_PATH} && cd ${MODULE_PATH} && rm -rf ${CLEAN_LIST} && tar -xzf /tmp/$TAR_NAME -C ${MODULE_PATH} && chown -R cjd ${MODULE_PATH}"
 
   if [ "$RESTART" = true ]; then
     echo "Starting stack at ${STACK_PATH}..."

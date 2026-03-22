@@ -1,6 +1,8 @@
 // Macro Name: Setup Auto-Encounter
-// Description: Automatically adds non-player tokens as hidden combatants and rolls their initiative in private, then adds player tokens to the tracker.
-// Icon: Core icons/svg/combat.svg
+// Description: Automatically adds non-player tokens as hidden combatants
+//     and rolls their initiative in private, then adds player tokens
+//     to the tracker.
+// Icon: Module other/setup-encounter.png
 
 (async () => {
     // 1. Get or create encounter

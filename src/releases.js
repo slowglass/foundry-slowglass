@@ -1,5 +1,12 @@
 export const RELEASES_MD = `# Release Notes
 
+## Pre release
+
+- **DevOps - Stack Management**: Integrated Dockge stack control into \`live-update.sh\` using \`docker compose stop/start\` to ensure seamless module replacement without software re-downloads or license invalidation.
+- **Remote Deployment Hardening**: Established robust path mapping and explicit ownership controls to support Dockge stacks and Strax host permissions.
+- **Auto-Start Optimization**: Verified environment compatibility for automated world loading post-deployment.
+
+
 ## v0.0.32
 
 - **Journal System Overhaul:** Added \`src/journal-manager.js\` to automatically establish and sync module documentation (Foundry-Slowglass and Game journals) directly into the host VTT worlds with proper GM/Player permissions and HTML generation.
@@ -77,6 +84,12 @@ export const RELEASES_MD = `# Release Notes
 
 `;
 export const RELEASES_HTML = `<h1>Release Notes</h1>
+<h2>Pre release</h2>
+<ul>
+<li><strong>DevOps - Stack Management</strong>: Integrated Dockge stack control into <code>live-update.sh</code> using <code>docker compose stop/start</code> to ensure seamless module replacement without software re-downloads or license invalidation.</li>
+<li><strong>Remote Deployment Hardening</strong>: Established robust path mapping and explicit ownership controls to support Dockge stacks and Strax host permissions.</li>
+<li><strong>Auto-Start Optimization</strong>: Verified environment compatibility for automated world loading post-deployment.</li>
+</ul>
 <h2>v0.0.32</h2>
 <ul>
 <li><strong>Journal System Overhaul:</strong> Added <code>src/journal-manager.js</code> to automatically establish and sync module documentation (Foundry-Slowglass and Game journals) directly into the host VTT worlds with proper GM/Player permissions and HTML generation.</li>

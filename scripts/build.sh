@@ -2,7 +2,6 @@
 set -e
 
 # Create necessary directories
-# Handle config
 CLEAN=false
 
 while [[ "$#" -gt 0 ]]; do
@@ -14,16 +13,15 @@ done
 
 if [ "$CLEAN" = true ]; then
     echo "Cleaning output directories..."
-    rm -rf icons/transparent icons/paper
+    rm -rf icons/transparent icons/paper packs/*.db
 fi
 
 mkdir -p packs
 mkdir -p icons/transparent
 
 # Build Macros
-echo "Building Macros..."
+echo "Packing Macros (NeDB/JSONL mode)..."
 node scripts/pack-macros.js
-fvtt package pack foundry-slowglass --compendiumName slowglass-macros --in ./.build/packs/macros --out ./packs --compendiumType Macro
 
 echo "Generating Releases..."
 node scripts/generate-releases.js
