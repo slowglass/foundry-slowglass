@@ -1,7 +1,6 @@
-/**
- * Macro: Request Ability Checks & Saves (Wide 2x3 Grid with Dividers)
- * Presents a streamlined text-based dialog for Stats with full-width buttons and clean spacing.
- */
+// Macro: Request Ability Checks & Saves (Wide 2x3 Grid with Dividers)
+// Presents a streamlined text-based dialog for Stats with full-width buttons and clean spacing.
+// Icon: Module other/anatomy/brain-mystical.png
 
 (async () => {
     const MODULE_NAME = "foundry-slowglass";

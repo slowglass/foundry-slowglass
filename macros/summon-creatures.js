@@ -1,6 +1,6 @@
 // Macro Name: Summon Creatures
 // Description: Summons a specified number of creatures from a compendium near the selected token.
-// Icon: Core icons/magic/nature/wolf-paw-glow-large-green.webp
+// Icon: Module other/summon-creatures.png
 
 (async () => {
     // Configuration - Change this UUID to point to the Tiger (or any other creature) in your Compendium

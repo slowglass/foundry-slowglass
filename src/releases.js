@@ -2,9 +2,11 @@ export const RELEASES_MD = `# Release Notes
 
 ## Pre release
 
-- **DevOps - Stack Management**: Integrated Dockge stack control into \`live-update.sh\` using \`docker compose stop/start\` to ensure seamless module replacement without software re-downloads or license invalidation.
-- **Remote Deployment Hardening**: Established robust path mapping and explicit ownership controls to support Dockge stacks and Strax host permissions.
-- **Auto-Start Optimization**: Verified environment compatibility for automated world loading post-deployment.
+- **Compendium Sync Refactor**: Replaced fvtt-cli packing with a direct NeDB (.db) generation to fix the 0-byte database bug.
+- **Deployment Hardening**: Updated \`live-update.sh\` to use \`docker stop\` (preserving license/installation) and implemented targeted directory clearing for safe image skipping.
+- **Macro Visual Refresh**: Synchronized icon paths across all 13 macros with the new categorized folder structure.
+- **New Icon Assets**: Designed and deployed custom "Tech-Tome" icons for "Create Select" and "Setup Encounter" macros.
+- **New Design Skill**: Created the \`stand-alone-icon\` skill for automating the generation of premium, parchment-style illustrations.
 
 
 ## v0.0.32
@@ -86,9 +88,11 @@ export const RELEASES_MD = `# Release Notes
 export const RELEASES_HTML = `<h1>Release Notes</h1>
 <h2>Pre release</h2>
 <ul>
-<li><strong>DevOps - Stack Management</strong>: Integrated Dockge stack control into <code>live-update.sh</code> using <code>docker compose stop/start</code> to ensure seamless module replacement without software re-downloads or license invalidation.</li>
-<li><strong>Remote Deployment Hardening</strong>: Established robust path mapping and explicit ownership controls to support Dockge stacks and Strax host permissions.</li>
-<li><strong>Auto-Start Optimization</strong>: Verified environment compatibility for automated world loading post-deployment.</li>
+<li><strong>Compendium Sync Refactor</strong>: Replaced fvtt-cli packing with a direct NeDB (.db) generation to fix the 0-byte database bug.</li>
+<li><strong>Deployment Hardening</strong>: Updated <code>live-update.sh</code> to use <code>docker stop</code> (preserving license/installation) and implemented targeted directory clearing for safe image skipping.</li>
+<li><strong>Macro Visual Refresh</strong>: Synchronized icon paths across all 13 macros with the new categorized folder structure.</li>
+<li><strong>New Icon Assets</strong>: Designed and deployed custom "Tech-Tome" icons for "Create Select" and "Setup Encounter" macros.</li>
+<li><strong>New Design Skill</strong>: Created the <code>stand-alone-icon</code> skill for automating the generation of premium, parchment-style illustrations.</li>
 </ul>
 <h2>v0.0.32</h2>
 <ul>

@@ -1,6 +1,6 @@
 // Macro Name: Import Transcripts
 // Description: Imports a text transcript file into a Journal Entry within the 'Game transcripts' compendium.
-// Icon: Module modules/foundry-slowglass/icons/transparent/documents/scroll-sealed-symbol.png
+// Icon: Module other/transcripts.png
 
 /* IMPORT TO COMPENDIUM: "Game transcripts" */
 
