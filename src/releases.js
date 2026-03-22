@@ -1,7 +1,7 @@
 export const RELEASES_MD = `# Release Notes
 
 ## Pre release
-- **Atomic Silent Initiative**: Refactored the \`Setup Auto-Encounter\` macro to calculate initiative results *before* combatant creation. By passing the \`initiative\` value directly in the call to \`createEmbeddedDocuments\`, we ensure combatants are never without an initiative score, thus preempting any automated "roll" triggers from the system or third-party modules.
+- **Silent Setup Encounter**: Renamed the macro to 'Silent Setup Encounter' to ensure the updated code (Atomic Silent Initiative) is used. Calculate initiative *before* combatant creation to preempt any automated "roll" triggers from the system or third-party modules.
 
 
 ## v0.0.33
@@ -107,7 +107,7 @@ export const RELEASES_MD = `# Release Notes
 export const RELEASES_HTML = `<h1>Release Notes</h1>
 <h2>Pre release</h2>
 <ul>
-<li><strong>Atomic Silent Initiative</strong>: Refactored the <code>Setup Auto-Encounter</code> macro to calculate initiative results *before* combatant creation. By passing the <code>initiative</code> value directly in the call to <code>createEmbeddedDocuments</code>, we ensure combatants are never without an initiative score, thus preempting any automated "roll" triggers from the system or third-party modules.</li>
+<li><strong>Silent Setup Encounter</strong>: Renamed the macro to 'Silent Setup Encounter' to ensure the updated code (Atomic Silent Initiative) is used. Calculate initiative *before* combatant creation to preempt any automated "roll" triggers from the system or third-party modules.</li>
 </ul>
 <h2>v0.0.33</h2>
 <ul>
