@@ -1,5 +1,10 @@
 export const RELEASES_MD = `# Release Notes
 
+## Pre release
+- **Private Encounter Initiative**: Updated the \`Setup Auto-Encounter\` macro to ensure all initiative rolls use \`blindroll\` for GM-only visibility.
+- **Automated Participant Rolling**: The macro now automatically rolls private initiative for both NPCs and player characters during encounter setup.
+
+
 ## v0.0.33
 - **Macro Icon Completion**: Designed and deployed unique "Tech-Tome" icons for "Summon Creatures" (Scientific Plate) and "Import Transcripts" (Victorian Microphone).
 - **Universal Header Refactor**: Standardized all 13 macro headers to the single-line comment format and synchronized icon paths with the modernized \`other/\`, \`paper/\`, and \`transparent/\` folder structure.
@@ -101,6 +106,11 @@ export const RELEASES_MD = `# Release Notes
 - Initial commit
 `;
 export const RELEASES_HTML = `<h1>Release Notes</h1>
+<h2>Pre release</h2>
+<ul>
+<li><strong>Private Encounter Initiative</strong>: Updated the <code>Setup Auto-Encounter</code> macro to ensure all initiative rolls use <code>blindroll</code> for GM-only visibility.</li>
+<li><strong>Automated Participant Rolling</strong>: The macro now automatically rolls private initiative for both NPCs and player characters during encounter setup.</li>
+</ul>
 <h2>v0.0.33</h2>
 <ul>
 <li><strong>Macro Icon Completion</strong>: Designed and deployed unique "Tech-Tome" icons for "Summon Creatures" (Scientific Plate) and "Import Transcripts" (Victorian Microphone).</li>

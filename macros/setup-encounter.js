@@ -1,6 +1,6 @@
 // Macro Name: Setup Auto-Encounter
 // Description: Automatically adds non-player tokens as hidden combatants
-//     and rolls all initiative privately (only seen by the GM), then 
+//     and rolls all initiative silently (no chat messages), then 
 //     adds player tokens to the tracker and rolls for them as well.
 // Icon: Module other/setup-encounter.png
 
@@ -41,12 +41,12 @@
         const createdCombatants = await combat.createEmbeddedDocuments("Combatant", npcData);
         const npcCombatantIds = createdCombatants.map(c => c.id);
 
-        // 4. Roll NPC initiative in private
-        // Using "blindroll" makes the roll only visible to the GM
+        // 4. Roll NPC initiative silently
+        // Setting create: false in messageOptions suppresses the chat roll message
         await combat.rollInitiative(npcCombatantIds, {
-            messageOptions: { rollMode: "blindroll" }
+            messageOptions: { create: false }
         });
-        ui.notifications.info(`Added and rolled private initiative for ${npcTokens.length} NPCs.`);
+        ui.notifications.info(`Added and silently rolled initiative for ${npcTokens.length} NPCs.`);
     } else {
         ui.notifications.info("No un-tracked NPCs found to add.");
     }
@@ -63,11 +63,12 @@
         const createdPlayerCombatants = await combat.createEmbeddedDocuments("Combatant", playerData);
         const playerCombatantIds = createdPlayerCombatants.map(c => c.id);
 
-        // 6. Roll Player initiative in private
+        // 6. Roll Player initiative silently
         await combat.rollInitiative(playerCombatantIds, {
-             messageOptions: { rollMode: "blindroll" }
+             messageOptions: { create: false }
         });
-        ui.notifications.info(`Added and rolled private initiative for ${playerTokens.length} Players.`);
+        ui.notifications.info(`Added and silently rolled initiative for ${playerTokens.length} Players.`);
     }
 })();
+
 
