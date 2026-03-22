@@ -1,5 +1,10 @@
 export const RELEASES_MD = `# Release Notes
 
+## v0.0.35
+- **Light Picker Modernization**: Refactored the \`Light\` macro into a high-performance grid-based UI with premium styling (2-column responsive layout).
+- **Enhanced Light Workflow**: Optimized the order of common light sources and added **Continual Flame** (Open/Closed) support for simplified magical lighting management.
+
+
 ## v0.0.34
 - **Silent Setup Encounter**: Renamed the macro to 'Silent Setup Encounter' to ensure the updated code (Atomic Silent Initiative) is used. Calculate initiative *before* combatant creation to preempt any automated "roll" triggers from the system or third-party modules.
 
@@ -105,6 +110,11 @@ export const RELEASES_MD = `# Release Notes
 - Initial commit
 `;
 export const RELEASES_HTML = `<h1>Release Notes</h1>
+<h2>v0.0.35</h2>
+<ul>
+<li><strong>Light Picker Modernization</strong>: Refactored the <code>Light</code> macro into a high-performance grid-based UI with premium styling (2-column responsive layout).</li>
+<li><strong>Enhanced Light Workflow</strong>: Optimized the order of common light sources and added <strong>Continual Flame</strong> (Open/Closed) support for simplified magical lighting management.</li>
+</ul>
 <h2>v0.0.34</h2>
 <ul>
 <li><strong>Silent Setup Encounter</strong>: Renamed the macro to 'Silent Setup Encounter' to ensure the updated code (Atomic Silent Initiative) is used. Calculate initiative *before* combatant creation to preempt any automated "roll" triggers from the system or third-party modules.</li>
