@@ -1,7 +1,7 @@
 // Macro Name: Setup Auto-Encounter
 // Description: Automatically adds non-player tokens as hidden combatants
-//     and sets all initiative silently (no chat messages or dice animations),
-//     then adds player tokens to the tracker and rolls for them as well.
+//     and sets all initiative silently (true silent: no dice animations),
+//     then adds player tokens to the tracker and adds them as well.
 // Icon: Module other/setup-encounter.png
 
 (async () => {
@@ -40,12 +40,13 @@
 
         const createdCombatants = await combat.createEmbeddedDocuments("Combatant", npcData);
         
-        // 4. Roll NPC initiative manually to avoid all UI (chat and 3D dice)
+        // 4. Roll NPC initiative with Math.random to avoid ALL dice animations
+        // By bypassing the Roll class entirely, we ensure no 3D dice modules are triggered.
         const npcUpdates = [];
         for (const c of createdCombatants) {
-            const roll = await c.getInitiativeRoll();
-            await roll.evaluate();
-            npcUpdates.push({ _id: c.id, initiative: roll.total });
+            const d20 = Math.floor(Math.random() * 20) + 1;
+            const bonus = c.actor?.system?.attributes?.init?.total ?? 0;
+            npcUpdates.push({ _id: c.id, initiative: d20 + bonus });
         }
         await combat.updateEmbeddedDocuments("Combatant", npcUpdates);
         
@@ -65,18 +66,19 @@
 
         const createdPlayerCombatants = await combat.createEmbeddedDocuments("Combatant", playerData);
 
-        // 6. Roll Player initiative manually to avoid all UI (chat and 3D dice)
+        // 6. Roll Player initiative with Math.random to avoid ALL dice animations
         const playerUpdates = [];
         for (const c of createdPlayerCombatants) {
-            const roll = await c.getInitiativeRoll();
-            await roll.evaluate();
-            playerUpdates.push({ _id: c.id, initiative: roll.total });
+            const d20 = Math.floor(Math.random() * 20) + 1;
+            const bonus = c.actor?.system?.attributes?.init?.total ?? 0;
+            playerUpdates.push({ _id: c.id, initiative: d20 + bonus });
         }
         await combat.updateEmbeddedDocuments("Combatant", playerUpdates);
 
         ui.notifications.info(`Added and silently set initiative for ${playerTokens.length} Players.`);
     }
 })();
+
 
 
 

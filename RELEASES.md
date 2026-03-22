@@ -1,7 +1,7 @@
 # Release Notes
 
 ## Pre release
-- **Total Initiative Silence**: Refactored the `Setup Auto-Encounter` macro to manually evaluate and set initiative for all participants. By bypassing the core `rollInitiative` method, all chat messages and 3D dice animations (e.g., Dice So Nice) are successfully suppressed.
+- **True Silent Initiative**: The `Setup Auto-Encounter` macro now uses `Math.random()` to calculate initiative instead of the Foundry `Roll` class. This completely bypasses all internal hooks and events related to dice rolling, successfully preventing 3D dice modules (like Dice So Nice) from animating for any user.
 
 
 ## v0.0.33
