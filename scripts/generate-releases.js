@@ -54,9 +54,12 @@ if (!fs.existsSync(releasesMdPath)) {
 
 // Now read RELEASES.md and generate src/releases.js
 if (fs.existsSync(releasesMdPath)) {
-    const mdContent = fs.readFileSync(releasesMdPath, 'utf8');
+    let mdContent = fs.readFileSync(releasesMdPath, 'utf8');
     const outputPath = path.join(__dirname, '..', 'src', 'releases.js');
     
+    // Strip empty Pre release sections dynamically before exporting
+    mdContent = mdContent.replace(/## Pre release\s*(?=##)/, '');
+
     // Parse to simple HTML
     let htmlContent = mdContent
         .replace(/^# (.*?)$/gm, '<h1>$1</h1>')

@@ -7,7 +7,7 @@
 - **Journal System Overhaul:** Added `src/journal-manager.js` to automatically establish and sync module documentation (Foundry-Slowglass and Game journals) directly into the host VTT worlds with proper GM/Player permissions and HTML generation.
 - **Automated Deploy Notes:** Scripted `generate-releases.js` inside the build steps to convert the Markdown release history into JS-exported HTML elements for clean Foundry journal synchronization.
 - **Macro Modifications:** Updated user interaction macros (`ability.js`, `skills.js`) to support active-state context toggling and custom UI width rendering parameters.
-- **Module Maintenance & Deploy Skills:** Established workflow docs (`SKILL.md`) outlining processes for module live-updates and staging.
+- **Module Maintenance & Deploy Skills:** Established workflow docs (`SKILL.md`) and enhanced `live-update.sh` with Dockge stack management (automated stop/start) and UID-specific permission handling.
 
 ## v0.0.31
 

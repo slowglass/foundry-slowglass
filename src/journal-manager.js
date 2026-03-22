@@ -36,7 +36,6 @@ export class JournalManager {
 
     console.log("Foundry-Slowglass | GM detected, verifying journal setup.");
     await this._setupFoundrySlowglassJournal();
-    await this._setupGameJournal();
 
     this._openJournal("Foundry-Slowglass", "Releases");
   }
@@ -153,37 +152,6 @@ export class JournalManager {
     }
   }
 
-  /**
-   * Sets up the generic "Game" journal if it's missing.
-   */
-  static async _setupGameJournal() {
-    const name = "Game";
-    let journal = game.journal.getName(name);
-
-    if (!journal) {
-      console.log(`Foundry-Slowglass | Creating generic "Game" journal`);
-      const journalData = {
-        name: name,
-        ownership: {
-          default: CONST.DOCUMENT_OWNERSHIP_LEVELS.OBSERVER
-        },
-        pages: [{
-          name: name,
-          type: "text",
-          text: {
-            content: "<p>Global Game journal for shared notes.</p>",
-            format: CONST.JOURNAL_ENTRY_PAGE_FORMATS.HTML
-          }
-        }]
-      };
-      journal = await JournalEntry.create(journalData);
-    } else {
-      if ((journal.ownership.default ?? 0) < CONST.DOCUMENT_OWNERSHIP_LEVELS.OBSERVER) {
-        console.log(`Foundry-Slowglass | Updating permissions for "${name}"`);
-        await journal.update({ "ownership.default": CONST.DOCUMENT_OWNERSHIP_LEVELS.OBSERVER });
-      }
-    }
-  }
 
   /**
    * Opens the specified journal sheet for the user.

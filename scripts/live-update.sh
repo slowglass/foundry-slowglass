@@ -6,11 +6,13 @@ source .env
 ./scripts/build.sh
 
 SKIP_IMAGES=false
+RESTART=true
 GAMES=()
 
 while [[ "$#" -gt 0 ]]; do
     case $1 in
         --skip-images) SKIP_IMAGES=true ;;
+        --no-restart) RESTART=false ;;
         -*) echo "Unknown parameter passed: $1"; exit 1 ;;
         *) GAMES+=("$1") ;;
     esac
@@ -35,13 +37,32 @@ echo "Copying to ${FOUNDRY_HOST}..."
 scp $TAR_NAME ${FOUNDRY_HOST}:/tmp/$TAR_NAME
 
 for GAME in "${GAMES[@]}"; do
+  echo "--------------------------------------"
   echo "Updating game: ${GAME}..."
-  FOUNDRY_PATH="/home/cjd/services/foundry/${GAME}/Data/modules/foundry-slowglass"
+  
+  # Dockge stack location
+  STACK_PATH="/home/cjd/services/dockge/stacks/foundry-${GAME}"
+  # Foundry Data location
+  DATA_PATH="/home/cjd/services/foundry/${GAME}"
+  # Module target path
+  MODULE_PATH="${DATA_PATH}/Data/modules/foundry-slowglass"
 
-  # Extract tar and fix permissions (packs are deliberately omitted to preserve remote compendiums)
-  ssh ${FOUNDRY_HOST} "mkdir -p ${FOUNDRY_PATH} && tar -xzf /tmp/$TAR_NAME -C ${FOUNDRY_PATH} && chown -R cjd ${FOUNDRY_PATH}"
+  if [ "$RESTART" = true ]; then
+    echo "Stopping stack at ${STACK_PATH}..."
+    ssh ${FOUNDRY_HOST} "cd ${STACK_PATH} && docker compose down"
+  fi
+
+  echo "Extracting files to ${MODULE_PATH}..."
+  ssh ${FOUNDRY_HOST} "mkdir -p ${MODULE_PATH} && tar -xzf /tmp/$TAR_NAME -C ${MODULE_PATH} && chown -R 3:2 ${DATA_PATH}"
+
+  if [ "$RESTART" = true ]; then
+    echo "Starting stack at ${STACK_PATH}..."
+    ssh ${FOUNDRY_HOST} "cd ${STACK_PATH} && docker compose up -d"
+  fi
 done
 
+echo "--------------------------------------"
 echo "Cleaning up..."
 rm $TAR_NAME
 ssh ${FOUNDRY_HOST} "rm /tmp/$TAR_NAME"
+echo "Live update complete!"

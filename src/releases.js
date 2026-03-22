@@ -1,6 +1,6 @@
 export const RELEASES_MD = `# Release Notes
 
-## Pre release
+## v0.0.32
 
 - **Journal System Overhaul:** Added \`src/journal-manager.js\` to automatically establish and sync module documentation (Foundry-Slowglass and Game journals) directly into the host VTT worlds with proper GM/Player permissions and HTML generation.
 - **Automated Deploy Notes:** Scripted \`generate-releases.js\` inside the build steps to convert the Markdown release history into JS-exported HTML elements for clean Foundry journal synchronization.
@@ -77,7 +77,7 @@ export const RELEASES_MD = `# Release Notes
 
 `;
 export const RELEASES_HTML = `<h1>Release Notes</h1>
-<h2>Pre release</h2>
+<h2>v0.0.32</h2>
 <ul>
 <li><strong>Journal System Overhaul:</strong> Added <code>src/journal-manager.js</code> to automatically establish and sync module documentation (Foundry-Slowglass and Game journals) directly into the host VTT worlds with proper GM/Player permissions and HTML generation.</li>
 <li><strong>Automated Deploy Notes:</strong> Scripted <code>generate-releases.js</code> inside the build steps to convert the Markdown release history into JS-exported HTML elements for clean Foundry journal synchronization.</li>
