@@ -1,6 +1,6 @@
 export const RELEASES_MD = `# Release Notes
 
-## Pre release
+## v0.0.34
 - **Silent Setup Encounter**: Renamed the macro to 'Silent Setup Encounter' to ensure the updated code (Atomic Silent Initiative) is used. Calculate initiative *before* combatant creation to preempt any automated "roll" triggers from the system or third-party modules.
 
 
@@ -105,7 +105,7 @@ export const RELEASES_MD = `# Release Notes
 - Initial commit
 `;
 export const RELEASES_HTML = `<h1>Release Notes</h1>
-<h2>Pre release</h2>
+<h2>v0.0.34</h2>
 <ul>
 <li><strong>Silent Setup Encounter</strong>: Renamed the macro to 'Silent Setup Encounter' to ensure the updated code (Atomic Silent Initiative) is used. Calculate initiative *before* combatant creation to preempt any automated "roll" triggers from the system or third-party modules.</li>
 </ul>

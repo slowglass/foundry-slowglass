@@ -1,6 +1,6 @@
-// Macro Name: Light Picker (Grid Style)
+// Macro Name: Light Picker
 // Description: Quick UI to toggle common light sources for selected tokens.
-// Icon: Core icons/sundries/lights/torch-brown-lit.webp
+// Icon: Core sundries/lights/torch-brown-lit.webp
 
 (async () => {
     const torchAnimation = { "type": "torch", "speed": 1, "intensity": 1, "reverse": false };
@@ -8,16 +8,17 @@
 
     const lightSources = [
         { id: "none", label: "None", data: { "light.dim": 0, "light.bright": 0, "light.angle": 360, "light.luminosity": 0.5, "light.animation": noAnimation } },
-        { id: "torch", label: "Torch", data: { "light.dim": 40, "light.bright": 20, "light.angle": 360, "light.luminosity": 0.5, "light.animation": torchAnimation } },
-        { id: "light", label: "Light Cantrip", data: { "light.dim": 40, "light.bright": 20, "light.angle": 360, "light.luminosity": 0.5, "light.animation": noAnimation } },
+        { id: "light", label: "Cantrip", data: { "light.dim": 40, "light.bright": 20, "light.angle": 360, "light.luminosity": 0.5, "light.animation": noAnimation } },
         { id: "lamp", label: "Lamp", data: { "light.dim": 45, "light.bright": 15, "light.angle": 360, "light.luminosity": 0.5, "light.animation": torchAnimation } },
         { id: "bullseye", label: "Bullseye Lantern", data: { "light.dim": 120, "light.bright": 60, "light.angle": 45, "light.luminosity": 0.5, "light.animation": torchAnimation } },
-        { id: "hoodedOpen", label: "Hooded (Open)", data: { "light.dim": 60, "light.bright": 30, "light.angle": 360, "light.luminosity": 0.5, "light.animation": torchAnimation } },
-        { id: "hoodedClosed", label: "Hooded (Closed)", data: { "light.dim": 5, "light.bright": 0, "light.angle": 360, "light.luminosity": 0.5, "light.animation": torchAnimation } },
-        { id: "ffire", label: "Faerie Fire", data: { "light.dim": 8, "light.bright": 0, "light.angle": 360, "light.luminosity": 0.5, "light.animation": torchAnimation } },
-        { id: "darkness", label: "Darkness Spell", data: { "light.dim": 0, "light.bright": 15, "light.angle": 360, "light.luminosity": -0.15, "light.animation": noAnimation } },
-        { id: "candle", label: "Candle", data: { "light.dim": 10, "light.bright": 5, "light.angle": 360, "light.luminosity": 0.5, "light.animation": torchAnimation } }
+        { id: "hoodedOpen", label: "Hooded Lantern (Open)", data: { "light.dim": 60, "light.bright": 30, "light.angle": 360, "light.luminosity": 0.5, "light.animation": torchAnimation } },
+        { id: "hoodedClosed", label: "Hooded Lantern (Closed)", data: { "light.dim": 5, "light.bright": 0, "light.angle": 360, "light.luminosity": 0.5, "light.animation": torchAnimation } },
+        { id: "continualOpen", label: "Continual Flame (Open)", data: { "light.dim": 40, "light.bright": 20, "light.angle": 360, "light.luminosity": 0.5, "light.animation": noAnimation } },
+        { id: "continualClosed", label: "Continual Flame (Closed)", data: { "light.dim": 5, "light.bright": 0, "light.angle": 360, "light.luminosity": 0.5, "light.animation": noAnimation } },
+        { id: "candle", label: "Candle", data: { "light.dim": 10, "light.bright": 5, "light.angle": 360, "light.luminosity": 0.5, "light.animation": torchAnimation } },
+        { id: "torch", label: "Torch", data: { "light.dim": 40, "light.bright": 20, "light.angle": 360, "light.luminosity": 0.5, "light.animation": torchAnimation } }
     ];
+
 
     const sourceBtns = lightSources.map(s => {
         return `<button type="button" class="light-btn" data-id="${s.id}" title="${s.label}">
