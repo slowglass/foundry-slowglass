@@ -4,21 +4,14 @@ trigger: always_on
 
 # Project Description
 
-## Key Concepts for Foundry VTT v13 Module Development
-This project is a Foundry VTT Module that works with Foundry VTT Version 13 (See https://foundryvtt.com/api/v13/)
+## Key Concepts for Foundry VTT v13 and D&D 5e v5.x Module Development
+This project is a Foundry VTT Module that works with **Foundry VTT Version 13** and the **D&D 5e System Version 5.x** (specifically v5.3.1).
 
-### Module Structure
-- Modules are subfolders in `{userData}/Data/modules/`
-- Must contain a `module.json` manifest file
-- Recommended structure: templates/, scripts/, styles/, packs/, lang/
-
-### Manifest Requirements
-- `id`: unique identifier (lowercase, hyphens only)
-- `title`: human-readable name
-- `description`: module description
-- `version`: version number
-- `compatibility`: Foundry VTT version compatibility
-- `authors`: array of author objects
+### Architecture Requirements (D&D 5e v5.x)
+- **Activities**: The system uses a modular Activity-based architecture. Activation types must be registered in `CONFIG.DND5E.activityActivationTypes`.
+- **Modern Sheets**: NPC sheets use the `ActorSheet5eNPC2` class.
+- **Data Hook**: Use the `dnd5e.getActorSheetData` hook for sheet data manipulation. Section headers in 5.x are controlled by the `label` property of objects in the `features` array.
+- **NO LEGACY**: Do not assume V11 or dnd5e v4 logic. Avoid legacy config paths unless strictly needed for backwards compatibility with specific user items.
 
 ### JavaScript Integration
 - Use `esmodules` array for ES6 modules (preferred)
