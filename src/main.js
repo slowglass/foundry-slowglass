@@ -121,11 +121,17 @@ Hooks.once('ready', async () => {
                     else if (advantageMode === "disadvantage") options.disadvantage = true;
 
                     if (rollType === "save") {
-                        await actor.rollAbilitySave(id, options);
+                        if (typeof actor.rollSavingThrow === "function") await actor.rollSavingThrow({ ability: id, ...options });
+                        else await actor.rollAbilitySave(id, options);
                     } else if (rollType === "check") {
-                        await actor.rollAbilityCheck(id, options);
+                        if (typeof actor.rollAbilityTest === "function") await actor.rollAbilityTest({ ability: id, ...options });
+                        else await actor.rollAbilityCheck(id, options);
                     } else if (rollType === "skill") {
-                        await actor.rollSkill(id, options);
+                        try {
+                            await actor.rollSkill({ skill: id, ...options });
+                        } catch (err) {
+                            await actor.rollSkill(id, options);
+                        }
                     }
                 } catch (err) {
                     console.error(`${MODULE_NAME} | Roll request failed for ${actor.name}`, err);
