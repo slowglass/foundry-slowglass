@@ -7,168 +7,125 @@ import { ChatHandler } from "./chat-handler.js";
 import { WorldTreeRageHandler } from "./path-of-the-world-tree-rage-handler.js";
 import { JournalManager } from "./journal-manager.js";
 
+const MODULE_ID = MODULE_NAME; 
+
 Hooks.once('init', () => {
-  console.log(`${MODULE_NAME} | Initializing`);
-  console.log(`${MODULE_NAME} | Version ${MODULE_VERSION} loaded.`);
+    console.log(`${MODULE_NAME} | Initializing v${MODULE_VERSION}`);
+    
+    // Register the activation type first, INCLUDING the critical 'header' property
+    const villainActivation = { 
+        label: "Villain Action",     // Used for subtitles and dropdowns
+        header: "Villain Actions",   // Used for the category stripe/header!
+        group: "monster"             // Where it appears in the menu
+    };
+    
+    CONFIG.DND5E.abilityActivationTypes.villain = villainActivation;
+    
+    if (CONFIG.DND5E.activityActivationTypes) {
+        CONFIG.DND5E.activityActivationTypes.villain = villainActivation;
+    }
 
-  // Register Custom Ammunition Types
-  CONFIG.DND5E.consumableTypes.ammo.subtypes.smallBolt = "DND5E.ConsumableSmallBolt";
-  console.log(`${MODULE_NAME} | Added Small Bolt to ammunition subtypes`, CONFIG.DND5E.consumableTypes.ammo.subtypes);
+    // Modern D&D 5e v5.x NPC Section Configuration
+    if (CONFIG.DND5E.npcFeatureSections) {
+        CONFIG.DND5E.npcFeatureSections.villain = {
+            label: "Villain Actions",
+            features: ["villain"] // Matches activation type
+        };
+    }
 
-  // Roll Data Handler for injecting @is_action variables
-  // Register early to ensure we catch all getRollData calls
-  const rollDataHandler = new RollDataHandler();
-  rollDataHandler.registerWrapper();
-
-  // Chat Handler
-  new ChatHandler();
+    try { new ChatHandler(); } catch (err) {}
 });
 
-
 Hooks.once('ready', async () => {
-  console.log(`✅ ${MODULE_NAME} | Ready`);
-
-  // Initialize and ensure journals exist
-  JournalManager.init();
-
-  // Actor Manager for status effects
-  const actorManager = new ActorManager();
-  Hooks.on("updateActor", actorManager.handleUpdate.bind(actorManager));
-
-  // Attack Roll Handler for injecting Action Type dropdown
-  const attackRollHandler = new AttackRollHandler();
-  Hooks.on("renderDialog", attackRollHandler.handleRenderDialog.bind(attackRollHandler));
-  Hooks.on("renderRollConfigurationDialog", attackRollHandler.handleRenderDialog.bind(attackRollHandler));
-
-  // New hooks for Weapon Roll Hook replacement logic
-  Hooks.on("dnd5e.preRollAttackV2", attackRollHandler.handlePreRollAttack.bind(attackRollHandler));
-  Hooks.on("dnd5e.preRollDamageV2", attackRollHandler.handlePreRollDamage.bind(attackRollHandler));
-  Hooks.on("dnd5e.rollAttackV2", attackRollHandler.handleRollAttack.bind(attackRollHandler));
-  Hooks.on("dnd5e.rollDamageV2", attackRollHandler.handleRollDamage.bind(attackRollHandler));
-  Hooks.on("dnd5e.renderChatMessage", attackRollHandler.handleRenderChatMessage.bind(attackRollHandler));
-
-  // Encounter Tracker for throwable weapons and ammunition
-  const encounterTracker = new EncounterTracker();
-  Hooks.on("combatStart", encounterTracker._storeInitialCounts.bind(encounterTracker));
-  Hooks.on("deleteCombat", encounterTracker._calculateAndReportUsage.bind(encounterTracker));
-
-  // World Tree Rage Handler for granting temp HP on turn start
-  const worldTreeRageHandler = new WorldTreeRageHandler();
-  Hooks.on("updateCombat", worldTreeRageHandler.onUpdateCombat.bind(worldTreeRageHandler));
-  Hooks.on("dnd5e.useItem", worldTreeRageHandler.onUseItem.bind(worldTreeRageHandler));
-  Hooks.on("dnd5e.postUseActivity", worldTreeRageHandler.onUseActivity.bind(worldTreeRageHandler));
-
-  // Socket listener for Roll Requests (Saves, Checks, Skills)
-  game.socket.on(`module.${MODULE_NAME}`, (data) => {
-    if (data.type === "requestRoll" || data.type === "requestSave") {
-      const uuids = Array.isArray(data.actorUuids) ? data.actorUuids : [data.actorUuid];
-      const rollType = data.rollType || (data.type === "requestSave" ? "save" : null);
-      const advantageMode = data.advantageMode || "ask";
-
-      for (const uuid of uuids) {
-        let doc = fromUuidSync(uuid);
-        if (!doc) continue;
-        const actor = doc.actor || (doc instanceof Actor ? doc : null);
-        if (!actor || !actor.isOwner) continue;
-
-        const traitId = data.id || data.abilityId;
-        const traitLabel = rollType === "skill" ? CONFIG.DND5E.skills[traitId]?.label : CONFIG.DND5E.abilities[traitId]?.label;
-        const typeLabel = rollType === "save" ? "Saving Throw" : rollType === "check" ? "Ability Check" : "Skill Check";
-
-        console.log(`${MODULE_NAME} | Received ${rollType} request for ${actor.name} (${traitId}) [${advantageMode}]`);
-
-        const triggerRoll = (mode) => {
-          try {
-            const options = {
-              advantage: mode === "advantage",
-              disadvantage: mode === "disadvantage",
-              slowglassMode: mode,
-              dialogOptions: { slowglassMode: mode }
+    console.log(`${MODULE_NAME} | Ready`);
+    
+    // Tidy5e v2 API
+    Hooks.on("tidy5e-sheet.ready", (api) => {
+        try {
+            const sectionConfig = {
+                section: "villain-actions",
+                label: "Villain Actions",
+                filter: (item) => {
+                    const act = item.system?.activation?.type || item.system?.activation?.condition;
+                    return act === "villain";
+                }
             };
 
-            if (rollType === "save") {
-              if (typeof actor.rollSavingThrow === "function") actor.rollSavingThrow({ ability: traitId, ...options });
-              else if (typeof actor.rollAbilitySave === "function") actor.rollAbilitySave(traitId, options);
-            } else if (rollType === "check") {
-              if (typeof actor.rollAbilityCheck === "function") actor.rollAbilityCheck({ ability: traitId, ...options });
-              else if (typeof actor.rollAbility === "function") actor.rollAbility(traitId, { type: "check", ...options });
-            } else if (rollType === "skill") {
-              if (typeof actor.rollSkill === "function") actor.rollSkill({ skill: traitId, ...options });
-              else if (typeof actor.rollAbility === "function") actor.rollAbility(traitId, { type: "skill", ...options });
+            const apiMethods = ["registerActorItemSections", "registerNpcItemSections", "registerItemSections"];
+            let registered = false;
+            for (const method of apiMethods) {
+                if (typeof api[method] === "function") {
+                    api[method]([sectionConfig]);
+                    console.log(`${MODULE_NAME} | Tidy5e v2 | Registered via ${method}`);
+                    registered = true;
+                    break;
+                }
             }
-          } catch (err) {
-            console.error(`${MODULE_NAME} | Roll request failed for ${actor.name}`, err);
-          }
-        };
 
-        // Always trigger the standard dnd5e dialog
-        triggerRoll(advantageMode);
-      }
-    }
-    // Handle World Tree Rage notifications
-    if (data.type === "worldTreeRageNotification") {
-      WorldTreeRageHandler.handleSocketMessage(data);
-    }
-  });
-
-  // Filter dnd5e Roll Configuration Dialog buttons based on GM request
-  const filterRollDialog = (app, html, data) => {
-    // Check both standard and nested options for our custom flag
-    const mode = app.options?.slowglassMode || app.options?.dialogOptions?.slowglassMode;
-    if (!mode || mode === "ask") return;
-
-    html = html instanceof HTMLElement ? $(html) : html;
-
-    // Select all buttons in the dialog that look like roll options
-    const allButtons = html.find('button');
-    let foundMatch = false;
-
-    allButtons.each((i, btn) => {
-      const $btn = $(btn);
-      const text = $btn.text().toUpperCase().trim();
-      const name = ($btn.attr('name') || "").toUpperCase();
-
-      const isAdv = $btn.hasClass('advantage') || name === 'ADVANTAGE' || text.includes('ADVANTAGE');
-      const isDis = $btn.hasClass('disadvantage') || name === 'DISADVANTAGE' || text.includes('DISADVANTAGE');
-      const isNor = $btn.hasClass('normal') || name === 'NORMAL' || text.includes('NORMAL');
-
-      if (isAdv || isDis || isNor) {
-        foundMatch = true;
-        let shouldShow = false;
-        if (mode === "advantage" && isAdv) shouldShow = true;
-        if (mode === "disadvantage" && isDis) shouldShow = true;
-        if (mode === "normal" && isNor) shouldShow = true;
-
-        if (!shouldShow) {
-          $btn.hide();
-          $btn.css({ "display": "none", "visibility": "hidden" });
-          $btn.addClass("hidden");
-        } else {
-          // Promote the remaining button to "ROLL"
-          $btn.css({ "display": "flex", "visibility": "visible" });
-          $btn.html('<i class="fas fa-dice-d20"></i> ROLL');
-          $btn.css({
-            "flex": "1",
-            "font-weight": "bold",
-            "border": "1px solid #ff6400",
-            "box-shadow": "inset 0 0 10px rgba(255, 100, 0, 0.3)",
-            "color": "white"
-          });
+            if (!registered && api.config?.actorItemSections?.register) {
+                api.config.actorItemSections.register(sectionConfig);
+                console.log(`${MODULE_NAME} | Tidy5e v2 | Registered via api.config`);
+                registered = true;
+            }
+        } catch (err) {
+            console.warn(`${MODULE_NAME} | Tidy API Error during registration:`, err);
         }
-      }
     });
-  };
 
-  Hooks.on("renderDialog", filterRollDialog);
-  Hooks.on("renderRollConfigurationDialog", filterRollDialog);
+    JournalManager.init();
+    const actorManager = new ActorManager();
+    Hooks.on("updateActor", actorManager.handleUpdate.bind(actorManager));
 
-  window.toggleCollapsible = (event) => {
-    const header = event.currentTarget;
-    const content = header.nextElementSibling; // Assuming content is the next sibling
-    if (content.style.display === "block") {
-      content.style.display = "none";
-    } else {
-      content.style.display = "block";
-    }
-  };
+    const attackRollHandler = new AttackRollHandler();
+    Hooks.on("renderDialog", attackRollHandler.handleRenderDialog.bind(attackRollHandler));
+    const hooks = ["dnd5e.preRollAttackV2", "dnd5e.preRollDamageV2", "dnd5e.rollAttackV2", "dnd5e.rollDamageV2", "dnd5e.renderChatMessage"];
+    hooks.forEach(h => {
+        const methodName = "handle" + h.split('.').pop().charAt(0).toUpperCase() + h.split('.').pop().slice(1);
+        if (typeof attackRollHandler[methodName] === "function") {
+            Hooks.on(h, attackRollHandler[methodName].bind(attackRollHandler));
+        } else {
+            console.warn(`${MODULE_NAME} | Missing handler method ${methodName} for hook ${h}`);
+        }
+    });
+
+    const encounterTracker = new EncounterTracker();
+    Hooks.on("combatStart", encounterTracker._storeInitialCounts.bind(encounterTracker));
+    Hooks.on("deleteCombat", encounterTracker._calculateAndReportUsage.bind(encounterTracker));
+
+    const worldTreeRageHandler = new WorldTreeRageHandler();
+    Hooks.on("updateCombat", worldTreeRageHandler.onUpdateCombat.bind(worldTreeRageHandler));
+    Hooks.on("dnd5e.useItem", worldTreeRageHandler.onUseItem.bind(worldTreeRageHandler));
+    Hooks.on("dnd5e.postUseActivity", worldTreeRageHandler.onUseActivity.bind(worldTreeRageHandler));
+
+    // Socket listeners
+    game.socket.on(`module.${MODULE_NAME}`, async (data) => {
+        if (data.type === "requestRoll") {
+            const { actorUuids, rollType, id, advantageMode } = data;
+            console.log(`${MODULE_NAME} | Socket | Roll request received:`, data);
+
+            for (const uuid of actorUuids) {
+                const actor = await fromUuid(uuid);
+                if (!actor) continue;
+
+                try {
+                    const options = {};
+                    if (advantageMode === "advantage") options.advantage = true;
+                    else if (advantageMode === "disadvantage") options.disadvantage = true;
+
+                    if (rollType === "save") {
+                        await actor.rollAbilitySave(id, options);
+                    } else if (rollType === "check") {
+                        await actor.rollAbilityCheck(id, options);
+                    } else if (rollType === "skill") {
+                        await actor.rollSkill(id, options);
+                    }
+                } catch (err) {
+                    console.error(`${MODULE_NAME} | Roll request failed for ${actor.name}`, err);
+                }
+            }
+        }
+
+        // World Tree Rage notifications
+        WorldTreeRageHandler.handleSocketMessage(data);
+    });
 });

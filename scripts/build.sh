@@ -13,7 +13,7 @@ done
 
 if [ "$CLEAN" = true ]; then
     echo "Cleaning output directories..."
-    rm -rf icons/transparent icons/paper packs/*.db
+    rm -rf icons/transparent icons/paper packs/*.db src/releases.js .build/ *.tar.gz
 fi
 
 mkdir -p packs
