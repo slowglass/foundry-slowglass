@@ -80,7 +80,15 @@ Hooks.once('ready', async () => {
     Hooks.on("renderDialog", attackRollHandler.handleRenderDialog.bind(attackRollHandler));
     const hooks = ["dnd5e.preRollAttackV2", "dnd5e.preRollDamageV2", "dnd5e.rollAttackV2", "dnd5e.rollDamageV2", "dnd5e.renderChatMessage"];
     hooks.forEach(h => {
-        const methodName = "handle" + h.split('.').pop().charAt(0).toUpperCase() + h.split('.').pop().slice(1);
+        const rawName = h.split('.').pop();
+        const capitalized = rawName.charAt(0).toUpperCase() + rawName.slice(1);
+        let methodName = "handle" + capitalized;
+        
+        // Check if handler exists, if not try without V2 suffix
+        if (typeof attackRollHandler[methodName] !== "function" && methodName.endsWith("V2")) {
+            methodName = methodName.slice(0, -2);
+        }
+
         if (typeof attackRollHandler[methodName] === "function") {
             Hooks.on(h, attackRollHandler[methodName].bind(attackRollHandler));
         } else {

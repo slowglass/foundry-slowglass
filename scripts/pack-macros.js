@@ -14,7 +14,14 @@ if (!fs.existsSync(path.dirname(OUTPUT_FILE))) {
  * Generates a consistent 16-character ID for a given string.
  */
 function generateId(name) {
-    return crypto.createHash('md5').update(name).digest('hex').substring(0, 16);
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    const hash = crypto.createHash('md5').update(name).digest('hex');
+    let id = "";
+    for (let i = 0; i < 16; i++) {
+        const charIndex = parseInt(hash.substring(i * 2, i * 2 + 2), 16) % chars.length;
+        id += chars[charIndex];
+    }
+    return id;
 }
 
 /**
