@@ -1,5 +1,7 @@
 # Release Notes
 
+## Pre release
+
 ## v0.0.36
 - **Modular Codebase Restructuring**: Transitioned the entire repository from a flat monolithic file layout to a feature-based folder architecture (`src/features/`, `src/lib/`), making `src/main.js` a minimal entry point bootstrap orchestrator.
 - **Controller-Restricted Roll Dialogs**: Restructured the socket roll request system (`requestRoll`) so that roll dialogs only pop up on the screens of the target characters' active controllers (online player owners, or GM fallback).
