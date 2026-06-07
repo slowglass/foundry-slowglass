@@ -36,3 +36,9 @@ This project is a Foundry VTT Module that works with **Foundry VTT Version 13** 
 - Reference `.gitusage` file in project root for complete git command guidelines
 - Use `git --no-pager status`, `git --no-pager log --oneline`, etc.
 - Follow commit message format: "Module Update: Brief description"
+
+## Codebase Architecture Guidelines
+- **Feature Folders**: Each distinct feature must have its code in its own folder under `src/features/` (e.g. `src/features/combat-rolls/`, `src/features/npc-actions/`).
+- **Common Utilities**: Any common, generic, or shared code should be placed in utility files within `src/lib/` (e.g. `src/lib/constants.js`, `src/lib/actor-manager.js`).
+- **Minimal Entrypoint**: `src/main.js` must be as light as possible. It should only import feature/lib initializers and register their hooks/event listeners, rather than containing feature logic or patching logic inline.
+

@@ -1,4 +1,4 @@
-import { MODULE_NAME } from "./constants.js";
+import { MODULE_NAME } from "../../../../lib/constants.js";
 
 /**
  * WorldTreeRageHandler - Handles "Path of the World Tree" Barbarian Rage features
@@ -245,9 +245,6 @@ export class WorldTreeRageHandler {
         const nearbyTokens = [];
 
         for (const token of scene.tokens) {
-            // Ensure we include the source token (self-targeting allowed)
-            // if (token.id === sourceToken.id) continue; // Removed to allow self-targeting
-
             const tokenActor = token.actor;
             if (!tokenActor?.hasPlayerOwner) continue;
 
@@ -446,10 +443,8 @@ export class WorldTreeRageHandler {
      * @param {string} message - The notification message
      */
     _notifyRelevantPlayers(targetActor, sourceActor, message) {
-        // Get user IDs who should see the notification
         const userIdsToNotify = new Set();
 
-        // Add Source's player owners
         if (sourceActor) {
             for (const user of game.users) {
                 if (!user.isGM && sourceActor.testUserPermission(user, "OWNER")) {
@@ -458,19 +453,16 @@ export class WorldTreeRageHandler {
             }
         }
 
-        // Add target actor's player owners
         for (const user of game.users) {
             if (!user.isGM && targetActor.testUserPermission(user, "OWNER")) {
                 userIdsToNotify.add(user.id);
             }
         }
 
-        // Show notification locally if current user should see it
         if (userIdsToNotify.has(game.user.id)) {
             ui.notifications.info(message);
         }
 
-        // Emit socket message for other users
         game.socket.emit(`module.${MODULE_NAME}`, {
             type: "worldTreeRageNotification",
             message: message,
@@ -480,7 +472,6 @@ export class WorldTreeRageHandler {
 
     /**
      * Handles incoming socket messages for World Tree rage notifications.
-     * Call this from main.js socket listener setup.
      * @param {Object} data - The socket message data
      */
     static handleSocketMessage(data) {
@@ -490,4 +481,16 @@ export class WorldTreeRageHandler {
             }
         }
     }
+}
+
+export function readyWorldTreeRage() {
+    const worldTreeRageHandler = new WorldTreeRageHandler();
+    Hooks.on("updateCombat", worldTreeRageHandler.onUpdateCombat.bind(worldTreeRageHandler));
+    Hooks.on("dnd5e.useItem", worldTreeRageHandler.onUseItem.bind(worldTreeRageHandler));
+    Hooks.on("dnd5e.postUseActivity", worldTreeRageHandler.onUseActivity.bind(worldTreeRageHandler));
+
+    // Register socket listener
+    game.socket.on(`module.${MODULE_NAME}`, (data) => {
+        WorldTreeRageHandler.handleSocketMessage(data);
+    });
 }

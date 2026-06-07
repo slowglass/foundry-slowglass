@@ -1,4 +1,4 @@
-import { MODULE_NAME } from "./constants.js";
+import { MODULE_NAME } from "../../lib/constants.js";
 
 export class EncounterTracker {
   constructor() {
@@ -141,8 +141,6 @@ export class EncounterTracker {
 
     let chatMessage = "";
 
-
-
     for (const [actorId, initialItemCounts] of initialCounts.entries()) {
       const actor = game.actors.get(actorId);
       if (!actor) continue;
@@ -182,10 +180,14 @@ export class EncounterTracker {
   _sendChatMessage(content) {
     ChatMessage.create({
       title: MODULE_NAME,
-      // user: game.user.id,
-      // speaker: ChatMessage.getSpeaker({ alias: MODULE_NAME }),
       content: content,
       whisper: ChatMessage.getWhisperRecipients("GM"), // Whisper to GM
     });
   }
+}
+
+export function readyCombatTracking() {
+    const encounterTracker = new EncounterTracker();
+    Hooks.on("combatStart", encounterTracker._storeInitialCounts.bind(encounterTracker));
+    Hooks.on("deleteCombat", encounterTracker._calculateAndReportUsage.bind(encounterTracker));
 }

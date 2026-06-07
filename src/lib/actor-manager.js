@@ -48,3 +48,8 @@ export class ActorManager {
     }
   }
 }
+
+export function readyActorManager() {
+    const actorManager = new ActorManager();
+    Hooks.on("updateActor", actorManager.handleUpdate.bind(actorManager));
+}

@@ -1,4 +1,4 @@
-import { RELEASES_MD, RELEASES_HTML } from "./releases.js";
+import { RELEASES_MD, RELEASES_HTML } from "../../releases.js";
 
 /**
  * Manages the creation and maintenance of module-specific journal entries.
@@ -175,4 +175,8 @@ export class JournalManager {
       console.warn(`Foundry-Slowglass | Cannot open journal "${name}" - not found.`);
     }
   }
+}
+
+export function readyJournalSync() {
+    JournalManager.init();
 }

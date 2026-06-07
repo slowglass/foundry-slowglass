@@ -1,4 +1,4 @@
-import { MODULE_NAME } from "./constants.js";
+import { MODULE_NAME } from "../../lib/constants.js";
 
 export class AttackRollHandler {
     constructor() {
@@ -9,8 +9,6 @@ export class AttackRollHandler {
      * Handles the renderDialog hook to inject the Action Type dropdown.
      */
     handleRenderDialog(app, html, data) {
-
-
         let isTarget = false;
         if (app.title && app.title.includes("Attack Roll")) isTarget = true;
         if (app.constructor.name === "RollConfigurationDialog") isTarget = true;
@@ -315,4 +313,30 @@ export class AttackRollHandler {
             if (ui.chat) ui.chat.scrollBottom();
         }
     }
+}
+
+export function readyAttackRollHandler() {
+    const attackRollHandler = new AttackRollHandler();
+    Hooks.on("renderDialog", attackRollHandler.handleRenderDialog.bind(attackRollHandler));
+    Hooks.on("renderApplication", attackRollHandler.handleRenderDialog.bind(attackRollHandler));
+    Hooks.on("renderRollConfigurationDialog", attackRollHandler.handleRenderDialog.bind(attackRollHandler));
+    Hooks.on("renderD20RollConfigurationDialog", attackRollHandler.handleRenderDialog.bind(attackRollHandler));
+    
+    const hooks = ["dnd5e.preRollAttackV2", "dnd5e.preRollDamageV2", "dnd5e.rollAttackV2", "dnd5e.rollDamageV2", "dnd5e.renderChatMessage"];
+    hooks.forEach(h => {
+        const rawName = h.split('.').pop();
+        const capitalized = rawName.charAt(0).toUpperCase() + rawName.slice(1);
+        let methodName = "handle" + capitalized;
+        
+        // Check if handler exists, if not try without V2 suffix
+        if (typeof attackRollHandler[methodName] !== "function" && methodName.endsWith("V2")) {
+            methodName = methodName.slice(0, -2);
+        }
+
+        if (typeof attackRollHandler[methodName] === "function") {
+            Hooks.on(h, attackRollHandler[methodName].bind(attackRollHandler));
+        } else {
+            console.warn(`${MODULE_NAME} | Missing handler method ${methodName} for hook ${h}`);
+        }
+    });
 }
