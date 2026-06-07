@@ -11,9 +11,9 @@ if [ -d "packs" ]; then
 fi
 
 # Remove generated releases
-if [ -f "src/releases.js" ]; then
-    echo "  - Removing src/releases.js"
-    rm src/releases.js
+if [ -f "src/generated/releases.js" ]; then
+    echo "  - Removing src/generated/releases.js"
+    rm src/generated/releases.js
 fi
 
 # Remove processed icons

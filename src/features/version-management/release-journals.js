@@ -1,4 +1,4 @@
-import { RELEASES_MD, RELEASES_HTML } from "../../releases.js";
+import { RELEASES_MD, RELEASES_HTML } from "../../generated/releases.js";
 
 /**
  * Manages the creation and maintenance of module-specific journal entries.

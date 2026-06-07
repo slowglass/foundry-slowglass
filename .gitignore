@@ -4,3 +4,4 @@ foundry-slowglass-*.zip
 packs
 .build/
 modules
+src/generated/releases.js

@@ -55,7 +55,7 @@ if (!fs.existsSync(releasesMdPath)) {
 // Now read RELEASES.md and generate src/releases.js
 if (fs.existsSync(releasesMdPath)) {
     let mdContent = fs.readFileSync(releasesMdPath, 'utf8');
-    const outputPath = path.join(__dirname, '..', 'src', 'releases.js');
+    const outputPath = path.join(__dirname, '..', 'src', 'generated', 'releases.js');
     
     // Strip empty Pre release sections dynamically before exporting
     mdContent = mdContent.replace(/## Pre release\s*(?=##)/, '');
@@ -106,7 +106,7 @@ if (fs.existsSync(releasesMdPath)) {
 
     const fileContent = `export const RELEASES_MD = \`${safeContent}\`;\nexport const RELEASES_HTML = \`${safeHtmlContent}\`;\n`;
     fs.writeFileSync(outputPath, fileContent);
-    console.log('✅ Generated src/releases.js from RELEASES.md');
+    console.log('✅ Generated src/generated/releases.js from RELEASES.md');
 } else {
     console.error("RELEASES.md still does not exist.");
 }
