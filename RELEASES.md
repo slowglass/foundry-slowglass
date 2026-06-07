@@ -1,5 +1,7 @@
 # Release Notes
 
+## Pre release
+
 ## v0.0.37
 - **Relocated Generated Assets**: Relocated the auto-generated `releases.js` file to `src/generated/releases.js` and added it to `.gitignore` to prevent tracking of build artifacts in git history.
 
