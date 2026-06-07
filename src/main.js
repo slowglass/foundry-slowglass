@@ -78,6 +78,9 @@ Hooks.once('ready', async () => {
 
     const attackRollHandler = new AttackRollHandler();
     Hooks.on("renderDialog", attackRollHandler.handleRenderDialog.bind(attackRollHandler));
+    Hooks.on("renderApplication", attackRollHandler.handleRenderDialog.bind(attackRollHandler));
+    Hooks.on("renderRollConfigurationDialog", attackRollHandler.handleRenderDialog.bind(attackRollHandler));
+    Hooks.on("renderD20RollConfigurationDialog", attackRollHandler.handleRenderDialog.bind(attackRollHandler));
     const hooks = ["dnd5e.preRollAttackV2", "dnd5e.preRollDamageV2", "dnd5e.rollAttackV2", "dnd5e.rollDamageV2", "dnd5e.renderChatMessage"];
     hooks.forEach(h => {
         const rawName = h.split('.').pop();
@@ -105,38 +108,59 @@ Hooks.once('ready', async () => {
     Hooks.on("dnd5e.useItem", worldTreeRageHandler.onUseItem.bind(worldTreeRageHandler));
     Hooks.on("dnd5e.postUseActivity", worldTreeRageHandler.onUseActivity.bind(worldTreeRageHandler));
 
+    async function processRollRequest(data) {
+        const { actorUuids, rollType, id, advantageMode } = data;
+        console.log(`${MODULE_NAME} | Roll request processing:`, data);
+
+        for (const uuid of actorUuids) {
+            const actor = await fromUuid(uuid);
+            if (!actor) continue;
+
+            // Determine if the current user should control/roll this actor
+            const playerOwners = game.users.filter(u => !u.isGM && actor.testUserPermission(u, "OWNER"));
+            const hasOnlinePlayerOwner = playerOwners.some(u => u.active);
+            const isController = hasOnlinePlayerOwner ? (!game.user.isGM && actor.isOwner) : game.user.isGM;
+
+            if (!isController) {
+                console.log(`${MODULE_NAME} | Skipping roll for ${actor.name} - current user is not a controller.`);
+                continue;
+            }
+
+            try {
+                const dialogConfig = (advantageMode === "advantage" || advantageMode === "disadvantage") 
+                    ? { options: { defaultButton: advantageMode } } 
+                    : {};
+
+                if (rollType === "save") {
+                    if (typeof actor.rollSavingThrow === "function") await actor.rollSavingThrow({ ability: id }, dialogConfig);
+                    else await actor.rollAbilitySave(id, { event: dialogConfig }); // Safe fallback for V3
+                } else if (rollType === "check") {
+                    if (typeof actor.rollAbilityTest === "function") await actor.rollAbilityTest({ ability: id }, dialogConfig);
+                    else await actor.rollAbilityCheck(id, { event: dialogConfig });
+                } else if (rollType === "skill") {
+                    try {
+                        await actor.rollSkill({ skill: id }, dialogConfig);
+                    } catch (err) {
+                        await actor.rollSkill(id, { event: dialogConfig });
+                    }
+                }
+            } catch (err) {
+                console.error(`${MODULE_NAME} | Roll request failed for ${actor.name}`, err);
+            }
+        }
+    }
+
+    const module = game.modules.get(MODULE_NAME);
+    if (module) {
+        module.api = {
+            processRollRequest
+        };
+    }
+
     // Socket listeners
     game.socket.on(`module.${MODULE_NAME}`, async (data) => {
         if (data.type === "requestRoll") {
-            const { actorUuids, rollType, id, advantageMode } = data;
-            console.log(`${MODULE_NAME} | Socket | Roll request received:`, data);
-
-            for (const uuid of actorUuids) {
-                const actor = await fromUuid(uuid);
-                if (!actor) continue;
-
-                try {
-                    const options = {};
-                    if (advantageMode === "advantage") options.advantage = true;
-                    else if (advantageMode === "disadvantage") options.disadvantage = true;
-
-                    if (rollType === "save") {
-                        if (typeof actor.rollSavingThrow === "function") await actor.rollSavingThrow({ ability: id, ...options });
-                        else await actor.rollAbilitySave(id, options);
-                    } else if (rollType === "check") {
-                        if (typeof actor.rollAbilityTest === "function") await actor.rollAbilityTest({ ability: id, ...options });
-                        else await actor.rollAbilityCheck(id, options);
-                    } else if (rollType === "skill") {
-                        try {
-                            await actor.rollSkill({ skill: id, ...options });
-                        } catch (err) {
-                            await actor.rollSkill(id, options);
-                        }
-                    }
-                } catch (err) {
-                    console.error(`${MODULE_NAME} | Roll request failed for ${actor.name}`, err);
-                }
-            }
+            await processRollRequest(data);
         }
 
         // World Tree Rage notifications

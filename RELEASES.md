@@ -1,11 +1,13 @@
 # Release Notes
 
 ## Pre release
-- **GM Encounter Logs Workflow**: Added a new macro "GMLog (Forgotten Realms)" that generates Harptos game-time (DR) and real-world timestamps for saving custom text notes to a dedicated "Logs" journal automatically.
-- **Select My Token Icon**: Assigned a new Victorian-style (Tech-Tome) module icon to the "Select My Token" macro.
-- **Macro Name Parsing Update**: Upgraded the internal packing script to dynamically parse explicit `// Macro Name:` header directives for custom display names without disrupting internal macro IDs.
-- **Light Picker Icon Update**: Generated and applied a custom 18th-century "Tech-Tome" icon for the `Light Picker` macro to match the module's aesthetic.
-- **Macro Compendium Organization**: Reorganized depreciated legacy macros (`skills-old.js`, `ability-old.js`) into an isolated `old/` directory and refactored the pack construction script to automatically bundle them into a dedicated "Old" compendium folder during deployment.
+- **Controller-Restricted Roll Dialogs**: Restructured the socket roll request system (`requestRoll`) so that roll dialogs only pop up on the screens of the target characters' active controllers (online player owners, or GM fallback).
+- **Macro Modernization**: Upgraded the macro suite (`ability.js`, `skills.js`) to use Foundry V13 / D&D 5e v5.x modern `DialogV2` APIs with clean styling, layout stability, and standardized v4+ roll method calls.
+- **Predefined Token Icon Changer**: Added a new GM macro `change-token-icon.js` to quickly switch a token's image from a list of predefined core and user icons.
+- **Mythic Encounter Setup**: Added the `mythic-encounter.js` macro to automate the setup, configuration, and spawning of mythic encounters.
+- **Forgotten Realms GM logs**: Integrated the `gm-logs.js` macro to quickly log encounter notes automatically annotated with Harptos calendar time and real-world timestamps.
+- **Compendium & Folder Organization**: Refactored `pack-macros.js` to automatically bundle legacy/deprecated macros into an "Old" folder inside the compendium database, isolating them from active macros.
+- **Thematic Victorian Assets**: Added numerous premium "Tech-Tome" style icons for the Corrupted Avatar of Lurue features, Light Picker, Select Token, and Shapechange.
 ## v0.0.35
 - **Light Picker Modernization**: Refactored the `Light` macro into a high-performance grid-based UI with premium styling (2-column responsive layout).
 - **Enhanced Light Workflow**: Optimized the order of common light sources and added **Continual Flame** (Open/Closed) support for simplified magical lighting management.

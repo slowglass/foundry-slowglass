@@ -9,6 +9,8 @@ export class AttackRollHandler {
      * Handles the renderDialog hook to inject the Action Type dropdown.
      */
     handleRenderDialog(app, html, data) {
+
+
         let isTarget = false;
         if (app.title && app.title.includes("Attack Roll")) isTarget = true;
         if (app.constructor.name === "RollConfigurationDialog") isTarget = true;
@@ -203,12 +205,19 @@ export class AttackRollHandler {
                 const actorUuids = Array.from(targets).map(t => t.actor.uuid);
                 console.log(`${MODULE_NAME} | Requesting ${abilityId} save for actors:`, actorUuids);
 
-                game.socket.emit(`module.${MODULE_NAME}`, {
+                const requestData = {
                     type: "requestRoll",
                     actorUuids: actorUuids,
                     rollType: "save",
                     id: abilityId
-                });
+                };
+
+                game.socket.emit(`module.${MODULE_NAME}`, requestData);
+
+                const moduleApi = game.modules.get(MODULE_NAME)?.api;
+                if (moduleApi?.processRollRequest) {
+                    moduleApi.processRollRequest(requestData);
+                }
 
                 ui.notifications.info(`Requested ${abilityId.toUpperCase()} saves from ${targets.size} target(s).`);
             });

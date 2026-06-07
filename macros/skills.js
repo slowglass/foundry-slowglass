@@ -111,7 +111,14 @@
                     return false;
                 }
 
-                game.socket.emit("module." + MODULE_NAME, { type: "requestRoll", actorUuids: selectedUuids, rollType: "skill", id: id, advantageMode: advantageMode });
+                const requestData = { type: "requestRoll", actorUuids: selectedUuids, rollType: "skill", id: id, advantageMode: advantageMode };
+                game.socket.emit("module." + MODULE_NAME, requestData);
+
+                const moduleApi = game.modules.get(MODULE_NAME)?.api;
+                if (moduleApi?.processRollRequest) {
+                    moduleApi.processRollRequest(requestData);
+                }
+
                 ui.notifications.info(`Requested ${id.toUpperCase()} Skill for ${selectedUuids.length} actors.`);
             }
         }]
