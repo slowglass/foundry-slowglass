@@ -8,6 +8,7 @@
 - **Forgotten Realms GM logs**: Integrated the `gm-logs.js` macro to quickly log encounter notes automatically annotated with Harptos calendar time and real-world timestamps.
 - **Compendium & Folder Organization**: Refactored `pack-macros.js` to automatically bundle legacy/deprecated macros into an "Old" folder inside the compendium database, isolating them from active macros.
 - **Thematic Victorian Assets**: Added numerous premium "Tech-Tome" style icons for the Corrupted Avatar of Lurue features, Light Picker, Select Token, and Shapechange.
+- **Conditional Light Restrictions**: Added ability to tag light sources and dynamically restrict visibility. Includes UI configuration field injections, a management macro (`light-restrictor`), and instance-level overriding of light source `disabled` and `active` states to selectively hide lights from unauthorized token viewers.
 ## v0.0.35
 - **Light Picker Modernization**: Refactored the `Light` macro into a high-performance grid-based UI with premium styling (2-column responsive layout).
 - **Enhanced Light Workflow**: Optimized the order of common light sources and added **Continual Flame** (Open/Closed) support for simplified magical lighting management.
