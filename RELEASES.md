@@ -1,6 +1,7 @@
 # Release Notes
 
-## Pre release
+## v0.0.37
+- **Relocated Generated Assets**: Relocated the auto-generated `releases.js` file to `src/generated/releases.js` and added it to `.gitignore` to prevent tracking of build artifacts in git history.
 
 ## v0.0.36
 - **Modular Codebase Restructuring**: Transitioned the entire repository from a flat monolithic file layout to a feature-based folder architecture (`src/features/`, `src/lib/`), making `src/main.js` a minimal entry point bootstrap orchestrator.
