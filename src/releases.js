@@ -1,6 +1,7 @@
 export const RELEASES_MD = `# Release Notes
 
-## Pre release
+## v0.0.36
+- **Modular Codebase Restructuring**: Transitioned the entire repository from a flat monolithic file layout to a feature-based folder architecture (\`src/features/\`, \`src/lib/\`), making \`src/main.js\` a minimal entry point bootstrap orchestrator.
 - **Controller-Restricted Roll Dialogs**: Restructured the socket roll request system (\`requestRoll\`) so that roll dialogs only pop up on the screens of the target characters' active controllers (online player owners, or GM fallback).
 - **Macro Modernization**: Upgraded the macro suite (\`ability.js\`, \`skills.js\`) to use Foundry V13 / D&D 5e v5.x modern \`DialogV2\` APIs with clean styling, layout stability, and standardized v4+ roll method calls.
 - **Predefined Token Icon Changer**: Added a new GM macro \`change-token-icon.js\` to quickly switch a token's image from a list of predefined core and user icons.
@@ -9,6 +10,7 @@ export const RELEASES_MD = `# Release Notes
 - **Compendium & Folder Organization**: Refactored \`pack-macros.js\` to automatically bundle legacy/deprecated macros into an "Old" folder inside the compendium database, isolating them from active macros.
 - **Thematic Victorian Assets**: Added numerous premium "Tech-Tome" style icons for the Corrupted Avatar of Lurue features, Light Picker, Select Token, and Shapechange.
 - **Conditional Light Restrictions**: Added ability to tag light sources and dynamically restrict visibility. Includes UI configuration field injections, a management macro (\`light-restrictor\`), and instance-level overriding of light source \`disabled\` and \`active\` states to selectively hide lights from unauthorized token viewers.
+
 ## v0.0.35
 - **Light Picker Modernization**: Refactored the \`Light\` macro into a high-performance grid-based UI with premium styling (2-column responsive layout).
 - **Enhanced Light Workflow**: Optimized the order of common light sources and added **Continual Flame** (Open/Closed) support for simplified magical lighting management.
@@ -119,8 +121,9 @@ export const RELEASES_MD = `# Release Notes
 - Initial commit
 `;
 export const RELEASES_HTML = `<h1>Release Notes</h1>
-<h2>Pre release</h2>
+<h2>v0.0.36</h2>
 <ul>
+<li><strong>Modular Codebase Restructuring</strong>: Transitioned the entire repository from a flat monolithic file layout to a feature-based folder architecture (<code>src/features/</code>, <code>src/lib/</code>), making <code>src/main.js</code> a minimal entry point bootstrap orchestrator.</li>
 <li><strong>Controller-Restricted Roll Dialogs</strong>: Restructured the socket roll request system (<code>requestRoll</code>) so that roll dialogs only pop up on the screens of the target characters' active controllers (online player owners, or GM fallback).</li>
 <li><strong>Macro Modernization</strong>: Upgraded the macro suite (<code>ability.js</code>, <code>skills.js</code>) to use Foundry V13 / D&D 5e v5.x modern <code>DialogV2</code> APIs with clean styling, layout stability, and standardized v4+ roll method calls.</li>
 <li><strong>Predefined Token Icon Changer</strong>: Added a new GM macro <code>change-token-icon.js</code> to quickly switch a token's image from a list of predefined core and user icons.</li>
